@@ -1,0 +1,2280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Meu Diário de Controle Emocional</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: { fontFamily: { sans: ['Inter', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'] } } }
+    };
+  </script>
+
+  <style>
+    html, body { background: #f8fafc; }
+    .hidden { display: none !important; }
+    body { -webkit-tap-highlight-color: transparent; }
+
+    /* Sliders */
+    input[type=range].meter {
+      -webkit-appearance: none; appearance: none;
+      width: 100%; height: 8px; border-radius: 999px;
+      background: #e2e8f0; outline: none; cursor: pointer;
+    }
+    input[type=range].meter::-webkit-slider-thumb {
+      -webkit-appearance: none; appearance: none;
+      width: 24px; height: 24px; border-radius: 50%;
+      background: var(--thumb, #4f46e5); border: 3px solid #fff;
+      box-shadow: 0 1px 5px rgba(15, 23, 42, .35);
+    }
+    input[type=range].meter::-moz-range-thumb {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--thumb, #4f46e5); border: 3px solid #fff;
+      box-shadow: 0 1px 5px rgba(15, 23, 42, .35);
+    }
+    input[type=range].meter:focus-visible { box-shadow: 0 0 0 4px rgba(99, 102, 241, .25); }
+    input[type=range].meter.is-empty::-webkit-slider-thumb { background: #cbd5e1; }
+    input[type=range].meter.is-empty::-moz-range-thumb { background: #cbd5e1; }
+
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { scrollbar-width: none; }
+
+    .fade-in { animation: fadeIn .25s ease; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+    #chart .pt { transition: r .15s ease; }
+    #chart g[data-day]:hover .pt { r: 7.5; }
+  </style>
+</head>
+
+<body class="font-sans text-slate-800 antialiased">
+<main id="app" class="max-w-4xl mx-auto px-4 py-6 sm:py-8 space-y-5 sm:space-y-6">
+
+  <!-- HEADER -->
+  <header class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div class="flex items-center gap-4">
+      <img src="data:image/webp;base64,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" alt="Raiz do Sentir Educacional" width="72" height="72" class="w-16 h-16 sm:w-[72px] sm:h-[72px] shrink-0 rounded-full shadow-sm">
+      <div>
+      <span class="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-indigo-700 bg-indigo-50 border border-indigo-100 rounded-full px-3 py-1">
+        <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+        Desafio 7 Dias de Desaceleração
+      </span>
+      <h1 class="mt-3 text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-900">Meu Diário de Controle Emocional</h1>
+      <p id="headerSub" class="mt-1 text-sm text-slate-500">Um passo por dia. Pratique, registre e veja sua mente desacelerar.</p>
+      </div>
+    </div>
+    <a id="whatsappBtn" href="#" target="_blank" rel="noopener noreferrer"
+       class="inline-flex items-center justify-center gap-2 shrink-0 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white text-sm font-semibold px-4 py-3 shadow-sm transition">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path d="M17.47 14.38c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.61-.92-2.21-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.21 3.08c.15.2 2.1 3.2 5.08 4.49.71.31 1.26.49 1.69.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2.01-1.41.25-.69.25-1.29.17-1.41-.07-.12-.27-.2-.57-.35zM12.04 21.5h-.01a9.45 9.45 0 0 1-4.82-1.32l-.35-.21-3.58.94.96-3.49-.23-.36a9.43 9.43 0 0 1-1.45-5.03c0-5.22 4.25-9.47 9.48-9.47a9.4 9.4 0 0 1 6.7 2.78 9.41 9.41 0 0 1 2.77 6.7c0 5.22-4.25 9.46-9.47 9.46zm8.06-17.53A11.33 11.33 0 0 0 12.04.63C5.76.63.65 5.74.65 12.02c0 2.01.52 3.97 1.52 5.7L.55 23.63l6.04-1.58a11.37 11.37 0 0 0 5.44 1.39h.01c6.28 0 11.39-5.11 11.39-11.39 0-3.04-1.18-5.9-3.33-8.05z"/>
+      </svg>
+      Entrar no Grupo do WhatsApp
+    </a>
+  </header>
+
+  <!-- AVISO DE ARMAZENAMENTO -->
+  <div id="storageWarning" class="hidden rounded-xl border border-amber-200 bg-amber-50 text-amber-800 text-sm px-4 py-3">
+    Seu navegador está bloqueando o salvamento local nesta página. Você pode usar o diário normalmente, mas os registros serão perdidos ao fechar ou recarregar.
+  </div>
+
+  <!-- BOAS-VINDAS E CONSENTIMENTO -->
+  <section id="onboarding" class="hidden bg-white rounded-2xl border border-indigo-200 shadow-sm p-5 sm:p-6">
+    <p class="text-xs font-semibold uppercase tracking-wider text-indigo-600">Antes de começar</p>
+    <h2 class="mt-1 text-xl sm:text-2xl font-bold text-slate-900">Como você gostaria de ser chamado?</h2>
+    <input id="obNome" type="text" maxlength="40" autocomplete="given-name" placeholder="Seu primeiro nome"
+      class="mt-4 w-full sm:max-w-sm rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 outline-none px-3 py-2.5 text-sm text-slate-800 transition">
+    <label class="mt-4 flex gap-3 items-start cursor-pointer rounded-xl bg-slate-50 border border-slate-200 p-4">
+      <input id="obConsent" type="checkbox" class="mt-0.5 w-5 h-5 shrink-0 accent-indigo-600">
+      <span id="obConsentText" class="text-sm text-slate-700 leading-relaxed"></span>
+    </label>
+    <p class="mt-2 text-xs text-slate-500">Compartilhar é opcional. Sem marcar, o diário funciona igual e tudo fica só neste aparelho.</p>
+    <p id="obMsg" class="mt-2 text-xs text-rose-600 font-medium" aria-live="polite"></p>
+    <button id="obStart" type="button" class="mt-3 w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-3 shadow-sm transition">Começar o desafio</button>
+  </section>
+
+  <!-- MÉTRICAS -->
+  <section data-gated class="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4" aria-label="Seu resumo">
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Progresso geral</p>
+        <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3 8 4-16 3 8h4"/></svg>
+        </span>
+      </div>
+      <p id="mProgress" class="mt-2 text-3xl font-extrabold text-slate-900">0%</p>
+      <div class="mt-3 h-2 w-full rounded-full bg-slate-100 overflow-hidden">
+        <div id="mProgressBar" class="h-full rounded-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all duration-500" style="width:0%"></div>
+      </div>
+      <p id="mProgressSub" class="mt-2 text-xs text-slate-500">0 de 7 dias concluídos</p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Redução da aceleração</p>
+        <span class="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l6 6 4-4 8 8"/><path d="M15 17h6v-6"/></svg>
+        </span>
+      </div>
+      <p id="mRelief" class="mt-2 text-3xl font-extrabold text-slate-900">0%</p>
+      <p id="mReliefSub" class="mt-3 text-xs text-slate-500 leading-relaxed">Alívio médio após a técnica. Preencha os medidores para calcular.</p>
+    </div>
+
+    <div class="bg-white rounded-2xl border border-slate-200 shadow-sm p-4 sm:p-5">
+      <div class="flex items-center justify-between">
+        <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Foco atual</p>
+        <span class="w-8 h-8 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg>
+        </span>
+      </div>
+      <p id="mFocus" class="mt-2 text-3xl font-extrabold text-slate-900">Dia 1</p>
+      <p id="mFocusSub" class="mt-3 text-xs text-slate-500 leading-relaxed"></p>
+      <button id="mFocusGo" type="button" class="hidden mt-2 text-xs font-semibold text-indigo-600 hover:text-indigo-800">Ir para o dia ativo</button>
+    </div>
+  </section>
+
+  <!-- PONTO DE PARTIDA: GAD-7 INICIAL -->
+  <section id="baselineSection" class="hidden bg-white rounded-2xl border border-indigo-200 shadow-sm p-5 sm:p-6 space-y-4">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wider text-indigo-600">Antes do Dia 1</p>
+      <h2 class="mt-1 text-xl sm:text-2xl font-bold text-slate-900">Seu ponto de partida</h2>
+      <p class="mt-2 text-sm text-slate-600 leading-relaxed">Responda 7 perguntas rápidas. No Dia 7 você responde de novo e vê o que mudou ao longo do desafio. Leva cerca de 1 minuto.</p>
+    </div>
+    <div id="baseForm" class="space-y-3">
+      <p class="text-sm font-semibold text-slate-800">Nas últimas 2 semanas, com que frequência você foi incomodado(a) pelos problemas abaixo?</p>
+      <div id="baseQuestions" class="space-y-3"></div>
+      <p id="baseMissing" class="text-xs text-slate-500" aria-live="polite"></p>
+      <button id="baseSubmit" type="button" class="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-3 shadow-sm transition disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed">Registrar meu ponto de partida</button>
+    </div>
+    <div id="baseResult" class="hidden space-y-3">
+      <div id="baseCard" class="rounded-xl border p-4 flex items-center gap-4">
+        <div class="text-center shrink-0">
+          <p id="baseScore" class="text-3xl font-extrabold leading-none"></p>
+          <p class="text-[11px] text-slate-500 mt-1">de 21</p>
+        </div>
+        <div class="min-w-0">
+          <span id="baseBand" class="inline-block text-xs font-semibold rounded-full px-2.5 py-1"></span>
+          <p id="baseText" class="mt-2 text-sm text-slate-700 leading-relaxed"></p>
+        </div>
+      </div>
+      <div id="baseHelp" class="hidden space-y-3">
+        <div class="rounded-xl border border-slate-200 p-4 space-y-3">
+          <p class="text-sm font-bold text-slate-900">Onde buscar ajuda gratuita</p>
+          <div>
+            <p class="text-xs font-semibold text-slate-800">No Brasil</p>
+            <p class="mt-0.5 text-xs text-slate-600 leading-relaxed">Atendimento pelo SUS na Unidade Básica de Saúde (UBS) ou no CAPS da sua cidade.</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-slate-800">No Reino Unido</p>
+            <p class="mt-0.5 text-xs text-slate-600 leading-relaxed">Fale com o seu GP ou faça o autoencaminhamento para o NHS Talking Therapies. Para orientação urgente, ligue 111.</p>
+          </div>
+          <p class="text-[11px] text-slate-500">Em outro país, procure o serviço público de saúde local.</p>
+        </div>
+        <div class="rounded-xl border border-rose-200 bg-rose-50 p-4">
+          <p class="text-sm font-bold text-rose-800">Se você estiver em sofrimento intenso</p>
+          <p class="mt-1 text-xs text-rose-800 leading-relaxed">Se tiver pensamentos de se machucar ou de não querer viver, fale agora com alguém.</p>
+          <ul class="mt-2 space-y-1.5 text-xs text-rose-800 leading-relaxed">
+            <li><strong>No Brasil:</strong> CVV, ligue 188 (gratuito, 24 horas) ou converse pelo chat em cvv.org.br. Emergência: SAMU 192.</li>
+            <li><strong>No Reino Unido:</strong> Samaritans, ligue 116 123 (gratuito, 24 horas). Emergência: 999.</li>
+            <li><strong>Em outro país:</strong> ligue para o número de emergência local.</li>
+          </ul>
+        </div>
+      </div>
+      <p class="text-xs text-slate-500">Este resultado não é um diagnóstico. Ele serve como referência para comparar no final.</p>
+    </div>
+  </section>
+
+  <!-- ABAS -->
+  <nav data-gated aria-label="Dias do desafio" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-2">
+    <div id="tabs" role="tablist" class="flex gap-2 overflow-x-auto no-scrollbar sm:grid sm:grid-cols-7"></div>
+  </nav>
+
+  <!-- PAINEL DO DIA -->
+  <section data-gated id="dayPanel" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6 space-y-6">
+    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div class="min-w-0">
+        <p id="dayKicker" class="text-xs font-semibold uppercase tracking-wider text-indigo-600">Dia 1 de 7</p>
+        <h2 id="dayTitle" class="mt-1 text-xl sm:text-2xl font-bold text-slate-900"></h2>
+        <p id="dayDesc" class="mt-2 text-sm sm:text-base text-slate-600 leading-relaxed"></p>
+      </div>
+      <div id="doneWrap" class="shrink-0 sm:max-w-[220px]">
+        <button id="doneBtn" type="button" class="w-full inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold px-4 py-3 transition"></button>
+        <p id="doneHint" class="hidden mt-2 text-[11px] leading-relaxed text-slate-500 sm:text-right"></p>
+      </div>
+    </div>
+
+    <!-- Aviso pós-conclusão -->
+    <div id="doneNote" class="hidden rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800 leading-relaxed"></div>
+
+    <!-- Dia bloqueado -->
+    <div id="lockedCard" class="hidden rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-5 py-8 text-center">
+      <span class="mx-auto w-12 h-12 rounded-full bg-white border border-slate-200 text-slate-400 flex items-center justify-center">
+        <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+      </span>
+      <p id="lockedTitle" class="mt-3 text-base font-bold text-slate-800"></p>
+      <p id="lockedText" class="mt-1 text-sm text-slate-500 leading-relaxed max-w-md mx-auto"></p>
+      <button id="lockedGo" type="button" class="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-indigo-600 hover:text-indigo-800"></button>
+    </div>
+
+    <!-- Exercício -->
+    <div id="exerciseCard" class="rounded-2xl border border-emerald-200 bg-gradient-to-br from-emerald-50 via-white to-white p-4 sm:p-5">
+      <div class="flex items-center gap-2">
+        <span class="w-7 h-7 rounded-lg bg-emerald-600 text-white flex items-center justify-center">
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c-4 4-4 8 0 12 4-4 4-8 0-12z"/><path d="M5 13c2 0 5 1 7 4 2-3 5-4 7-4"/><path d="M12 17v4"/></svg>
+        </span>
+        <p class="text-sm font-semibold text-emerald-800">Exercício prático do dia</p>
+        <span id="exDuration" class="ml-auto text-xs font-medium text-emerald-700 bg-white border border-emerald-200 rounded-full px-2.5 py-0.5"></span>
+      </div>
+      <h3 id="exTitle" class="mt-3 text-base sm:text-lg font-bold text-slate-900"></h3>
+      <ol id="exSteps" class="mt-3 space-y-2.5 text-sm text-slate-700"></ol>
+    </div>
+
+    <!-- Medidor -->
+    <div id="meterBlock">
+      <div class="flex flex-wrap items-center justify-between gap-2">
+        <h3 class="text-base font-bold text-slate-900">Medidor de Aceleração Mental</h3>
+        <span id="dayRelief" class="hidden text-xs font-semibold rounded-full px-2.5 py-1"></span>
+      </div>
+      <p class="mt-1 text-xs text-slate-500">1 significa mente calma e lenta. 10 significa mente a mil.</p>
+
+      <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="rounded-xl border border-slate-200 p-4">
+          <div class="flex items-center justify-between">
+            <label for="antes" class="text-sm font-semibold text-indigo-700">Antes da técnica</label>
+            <span id="antesVal" class="text-sm font-bold text-slate-400">não registrado</span>
+          </div>
+          <input id="antes" data-key="antes" type="range" min="1" max="10" step="1" value="5" class="meter mt-4" style="--thumb:#4f46e5" aria-describedby="antesHint">
+          <div class="mt-2 flex justify-between text-[11px] text-slate-400"><span>1 calma</span><span>10 acelerada</span></div>
+          <div class="mt-2 flex items-center justify-between">
+            <p id="antesHint" class="text-[11px] text-slate-400">Arraste para registrar</p>
+            <button type="button" data-clear="antes" class="hidden text-[11px] font-medium text-slate-400 hover:text-slate-600">limpar</button>
+          </div>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 p-4">
+          <div class="flex items-center justify-between">
+            <label for="depois" class="text-sm font-semibold text-emerald-700">Depois da técnica</label>
+            <span id="depoisVal" class="text-sm font-bold text-slate-400">não registrado</span>
+          </div>
+          <input id="depois" data-key="depois" type="range" min="1" max="10" step="1" value="5" class="meter mt-4" style="--thumb:#10b981" aria-describedby="depoisHint">
+          <div class="mt-2 flex justify-between text-[11px] text-slate-400"><span>1 calma</span><span>10 acelerada</span></div>
+          <div class="mt-2 flex items-center justify-between">
+            <p id="depoisHint" class="text-[11px] text-slate-400">Arraste para registrar</p>
+            <button type="button" data-clear="depois" class="hidden text-[11px] font-medium text-slate-400 hover:text-slate-600">limpar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reflexão -->
+    <div id="noteBlock">
+      <div class="flex items-center justify-between">
+        <label for="nota" class="text-base font-bold text-slate-900">Minha reflexão de hoje</label>
+        <span id="saveStatus" class="text-[11px] text-slate-400" aria-live="polite"></span>
+      </div>
+      <p id="notaPrompt" class="mt-1 text-xs text-slate-500"></p>
+      <textarea id="nota" rows="4" placeholder="Escreva aqui o que você percebeu, sentiu ou aprendeu hoje..."
+        class="mt-3 w-full rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:border-indigo-400 focus:ring-4 focus:ring-indigo-100 outline-none p-3 text-sm text-slate-700 leading-relaxed resize-y transition"></textarea>
+    </div>
+
+    <!-- Navegação -->
+    <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+      <button id="prevBtn" type="button" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-indigo-700 disabled:opacity-30 disabled:cursor-not-allowed py-2">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+        Dia anterior
+      </button>
+      <button id="nextBtn" type="button" class="inline-flex items-center gap-1 text-sm font-semibold text-slate-500 hover:text-indigo-700 disabled:opacity-30 disabled:cursor-not-allowed py-2">
+        Próximo dia
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+      </button>
+    </div>
+  </section>
+
+  <!-- GRÁFICO -->
+  <section data-gated class="bg-white rounded-2xl border border-slate-200 shadow-sm p-5 sm:p-6">
+    <div class="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+      <div>
+        <h2 class="text-lg font-bold text-slate-900">Minha evolução emocional</h2>
+        <p class="text-xs text-slate-500 mt-1">Nível de aceleração mental ao longo da semana. Toque em um ponto para abrir o dia.</p>
+      </div>
+      <div class="flex items-center gap-4 text-xs font-medium">
+        <span class="inline-flex items-center gap-1.5 text-indigo-700"><span class="w-4 h-1 rounded-full bg-indigo-600"></span>Antes da técnica</span>
+        <span class="inline-flex items-center gap-1.5 text-emerald-700"><span class="w-4 h-1 rounded-full bg-emerald-500"></span>Depois da técnica</span>
+      </div>
+    </div>
+    <div class="relative mt-4">
+      <svg id="chart" viewBox="0 0 640 270" class="w-full h-auto select-none" role="img" aria-label="Gráfico de evolução da aceleração mental"></svg>
+      <div id="chartEmpty" class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <p class="text-sm text-slate-400 bg-white/90 rounded-lg px-3 py-2 text-center">Seu gráfico aparece aqui assim que você registrar o primeiro medidor.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENCERRAMENTO: GAD-7 + RELATÓRIO -->
+  <section id="finalSection" class="hidden bg-white rounded-2xl border border-emerald-200 shadow-sm p-5 sm:p-6 space-y-5">
+    <div>
+      <p class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Encerramento do desafio</p>
+      <h2 class="mt-1 text-xl sm:text-2xl font-bold text-slate-900">Como você está, de verdade?</h2>
+      <p class="mt-2 text-sm text-slate-600 leading-relaxed">Para fechar a semana, responda de novo as 7 perguntas do Dia 1. Assim você vê, com o mesmo questionário, o que mudou desde o seu ponto de partida.</p>
+    </div>
+
+    <div id="gadForm" class="space-y-3">
+      <p class="text-sm font-semibold text-slate-800">Nas últimas 2 semanas, com que frequência você foi incomodado(a) pelos problemas abaixo?</p>
+      <div id="gadQuestions" class="space-y-3"></div>
+      <p id="gadMissing" class="text-xs text-slate-500" aria-live="polite"></p>
+      <button id="gadSubmit" type="button" class="w-full sm:w-auto inline-flex items-center justify-center rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-5 py-3 shadow-sm transition disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:cursor-not-allowed">Ver meu resultado</button>
+    </div>
+
+    <div id="gadResult" class="hidden space-y-4">
+      <div id="gadScoreCard" class="rounded-2xl border p-5 flex items-center gap-4">
+        <div class="text-center shrink-0">
+          <p id="gadScore" class="text-4xl font-extrabold leading-none"></p>
+          <p class="text-[11px] text-slate-500 mt-1">de 21 pontos</p>
+        </div>
+        <div class="min-w-0">
+          <span id="gadBand" class="inline-block text-xs font-semibold rounded-full px-2.5 py-1"></span>
+          <p id="gadText" class="mt-2 text-sm text-slate-700 leading-relaxed"></p>
+        </div>
+      </div>
+      <p id="gadCompare" class="hidden text-sm text-slate-700 leading-relaxed rounded-xl bg-slate-50 border border-slate-200 p-4"></p>
+      <p class="text-xs text-slate-500 leading-relaxed">Este resultado não é um diagnóstico. O GAD-7 é um questionário de rastreio: ele indica sinais, e só uma avaliação com um profissional de saúde mental pode dizer o que eles significam para você.</p>
+
+      <div id="ctaCard" class="rounded-2xl p-5 sm:p-6 text-white shadow-md" style="background:linear-gradient(135deg,#12386F 0%,#0750A5 100%)">
+        <p class="text-[11px] font-semibold uppercase tracking-wider" style="color:#E6B94E">Próximo passo</p>
+        <h3 id="ctaTitle" class="mt-1 text-lg sm:text-xl font-bold leading-snug"></h3>
+        <p id="ctaText" class="mt-2 text-sm leading-relaxed" style="color:#DDEBF8"></p>
+        <div class="mt-4 flex items-center gap-3">
+          <img id="ctaLogo" alt="" width="44" height="44" class="w-11 h-11 rounded-full shrink-0 ring-2 ring-white/30">
+          <div class="min-w-0">
+            <p id="ctaName" class="text-sm font-bold"></p>
+            <p id="ctaCred" class="text-[11px] leading-snug" style="color:#B9D3EE"></p>
+          </div>
+        </div>
+        <div class="mt-5 flex flex-col sm:flex-row gap-2">
+          <a id="careYes" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 rounded-xl bg-white text-sm font-bold px-5 py-3 transition hover:opacity-90" style="color:#0750A5">Quero agendar uma conversa</a>
+          <button id="careNo" type="button" class="rounded-xl text-sm font-semibold px-4 py-3 border border-white/30 text-white/90 hover:bg-white/10 transition">Agora não</button>
+        </div>
+        <p id="careStatus" class="mt-3 text-xs leading-relaxed" style="color:#DDEBF8"></p>
+      </div>
+
+      <div class="rounded-xl border border-slate-200 p-4 space-y-3">
+          <p class="text-sm font-bold text-slate-900">Onde buscar ajuda gratuita</p>
+          <div>
+            <p class="text-xs font-semibold text-slate-800">No Brasil</p>
+            <p class="mt-0.5 text-xs text-slate-600 leading-relaxed">Atendimento pelo SUS na Unidade Básica de Saúde (UBS) ou no CAPS da sua cidade.</p>
+          </div>
+          <div>
+            <p class="text-xs font-semibold text-slate-800">No Reino Unido</p>
+            <p class="mt-0.5 text-xs text-slate-600 leading-relaxed">Fale com o seu GP ou faça o autoencaminhamento para o NHS Talking Therapies. Para orientação urgente, ligue 111.</p>
+          </div>
+          <p class="text-[11px] text-slate-500">Em outro país, procure o serviço público de saúde local.</p>
+        </div>
+        <div class="rounded-xl border border-rose-200 bg-rose-50 p-4">
+          <p class="text-sm font-bold text-rose-800">Se você estiver em sofrimento intenso</p>
+          <p class="mt-1 text-xs text-rose-800 leading-relaxed">Se tiver pensamentos de se machucar ou de não querer viver, fale agora com alguém.</p>
+          <ul class="mt-2 space-y-1.5 text-xs text-rose-800 leading-relaxed">
+            <li><strong>No Brasil:</strong> CVV, ligue 188 (gratuito, 24 horas) ou converse pelo chat em cvv.org.br. Emergência: SAMU 192.</li>
+            <li><strong>No Reino Unido:</strong> Samaritans, ligue 116 123 (gratuito, 24 horas). Emergência: 999.</li>
+            <li><strong>Em outro país:</strong> ligue para o número de emergência local.</li>
+          </ul>
+        </div>
+
+      <button id="gadRedo" type="button" class="text-xs font-semibold text-slate-500 hover:text-slate-800 underline underline-offset-2">Refazer o questionário</button>
+    </div>
+
+    <div class="pt-4 border-t border-slate-100">
+      <button id="pdfBtn" type="button" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-5 py-3 shadow-sm transition disabled:opacity-60">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+        <span id="pdfBtnText">Baixar meu relatório em PDF</span>
+      </button>
+      <p id="pdfMsg" class="mt-2 text-xs text-slate-500 leading-relaxed" aria-live="polite">Inclui sua semana, o gráfico, o resultado do questionário e suas reflexões. O arquivo é gerado neste aparelho.</p>
+    </div>
+  </section>
+
+  <!-- BACKUP ENTRE APARELHOS -->
+  <details data-gated id="backupBox" class="group bg-white rounded-2xl border border-slate-200 shadow-sm">
+    <summary class="list-none [&::-webkit-details-marker]:hidden cursor-pointer flex items-center justify-between gap-3 p-5 sm:p-6">
+      <div class="flex items-center gap-3 min-w-0">
+        <span class="w-9 h-9 shrink-0 rounded-lg bg-indigo-50 text-indigo-600 flex items-center justify-center">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="11" height="8" rx="1.5"/><rect x="15" y="9" width="7" height="12" rx="1.5"/><path d="M5 16h5"/><path d="M8 13v3"/></svg>
+        </span>
+        <div class="min-w-0">
+          <h2 class="text-base font-bold text-slate-900">Levar meus dados para outro aparelho</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Para continuar no computador, em outro celular ou em outro navegador.</p>
+        </div>
+      </div>
+      <svg class="w-5 h-5 shrink-0 text-slate-400 transition group-open:rotate-180" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+    </summary>
+
+    <div class="px-5 sm:px-6 pb-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <!-- Exportar -->
+      <div class="rounded-xl border border-slate-200 p-4">
+        <p class="text-xs font-semibold uppercase tracking-wide text-indigo-600">Passo 1: neste aparelho</p>
+        <p class="mt-1 text-sm text-slate-600 leading-relaxed">Gere o seu código e envie para você mesmo pelo WhatsApp, e-mail ou bloco de notas.</p>
+        <button id="exportBtn" type="button" class="mt-3 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-semibold px-4 py-2.5 transition">Gerar meu código</button>
+        <div id="exportArea" class="hidden mt-3">
+          <textarea id="exportCode" rows="4" spellcheck="false" aria-label="Seu código de backup"
+            class="w-full rounded-lg border border-slate-200 bg-slate-50 p-2.5 font-mono text-[11px] text-slate-600 break-all resize-none outline-none focus:border-indigo-400"></textarea>
+          <div class="mt-2 flex gap-2">
+            <button id="copyBtn" type="button" class="flex-1 rounded-lg border border-indigo-200 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 text-sm font-semibold px-3 py-2 transition">Copiar código</button>
+            <button id="shareBtn" type="button" class="hidden flex-1 rounded-lg border border-emerald-200 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-sm font-semibold px-3 py-2 transition">Enviar para mim</button>
+          </div>
+          <p id="exportMsg" class="mt-2 text-[11px] text-slate-500 leading-relaxed" aria-live="polite"></p>
+        </div>
+      </div>
+
+      <!-- Importar -->
+      <div class="rounded-xl border border-slate-200 p-4">
+        <p class="text-xs font-semibold uppercase tracking-wide text-emerald-600">Passo 2: no outro aparelho</p>
+        <p class="mt-1 text-sm text-slate-600 leading-relaxed">Abra o diário no novo aparelho, cole o código aqui e toque em restaurar.</p>
+        <textarea id="importCode" rows="4" spellcheck="false" placeholder="Cole aqui o código que começa com RDS1-"
+          class="mt-3 w-full rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:border-emerald-400 p-2.5 font-mono text-[11px] text-slate-600 break-all resize-none outline-none transition"></textarea>
+        <button id="importBtn" type="button" class="mt-2 w-full rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold px-4 py-2.5 transition">Restaurar meus dados</button>
+        <div id="importConfirm" class="hidden mt-2 rounded-lg border border-amber-200 bg-amber-50 p-3">
+          <p id="importConfirmText" class="text-xs text-amber-800 leading-relaxed"></p>
+          <div class="mt-2 flex gap-2">
+            <button id="importYes" type="button" class="text-xs font-semibold text-white bg-amber-600 hover:bg-amber-700 rounded-md px-3 py-1.5">Substituir</button>
+            <button id="importNo" type="button" class="text-xs font-semibold text-slate-600 hover:text-slate-900 px-2 py-1.5">Cancelar</button>
+          </div>
+        </div>
+        <p id="importMsg" class="mt-2 text-[11px] leading-relaxed" aria-live="polite"></p>
+      </div>
+    </div>
+  </details>
+
+  <!-- RODAPÉ -->
+  <footer class="flex flex-col sm:flex-row items-center sm:items-start justify-between gap-3 pb-2">
+    <p class="text-[11px] text-slate-400 text-center sm:text-left max-w-md leading-relaxed">
+      Seus registros ficam salvos neste navegador e neste aparelho. Este diário apoia sua prática e não substitui acompanhamento profissional.
+      <span class="block mt-1.5 text-rose-600">Em sofrimento intenso? Brasil: CVV 188 ou SAMU 192. Reino Unido: Samaritans 116 123 ou 999.</span>
+      <span id="shareStatus" class="hidden block mt-1.5">
+        <span id="shareStatusText"></span>
+        <button id="shareToggle" type="button" class="font-semibold text-indigo-600 hover:text-indigo-800 underline underline-offset-2"></button>
+      </span>
+      <span id="shareConfirm" class="hidden block mt-1.5">
+        <span class="text-rose-700 font-medium">Parar de compartilhar e apagar o que já foi enviado?</span>
+        <button id="shareYes" type="button" class="ml-1 font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded px-2 py-0.5">Sim</button>
+        <button id="shareNo" type="button" class="ml-1 font-semibold text-slate-600 hover:text-slate-900">Cancelar</button>
+      </span>
+    </p>
+    <div class="shrink-0">
+      <button id="resetBtn" type="button" class="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-400 hover:text-rose-600 border border-slate-200 hover:border-rose-200 rounded-lg px-3 py-2 transition">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 3v6h6"/></svg>
+        Reiniciar Desafio
+      </button>
+      <div id="resetConfirm" class="hidden items-center gap-2 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2">
+        <span class="text-xs font-medium text-rose-700">Apagar todos os registros?</span>
+        <button id="resetYes" type="button" class="text-xs font-semibold text-white bg-rose-600 hover:bg-rose-700 rounded-md px-2.5 py-1">Sim, apagar</button>
+        <button id="resetNo" type="button" class="text-xs font-semibold text-slate-600 hover:text-slate-900 px-1.5 py-1">Cancelar</button>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script>
+(function () {
+  'use strict';
+
+  /* =========================================================
+     CONFIGURAÇÃO: edite aqui
+     ========================================================= */
+  const CONFIG = {
+    whatsappUrl: 'https://chat.whatsapp.com/COLE-AQUI-SEU-LINK-DE-CONVITE',
+    storageKey: 'desafio7d_desacelerar_v1',
+    // Libera um dia por vez: o próximo dia abre no dia seguinte à conclusão do anterior.
+    // Troque para true apenas para testar o app com todos os dias abertos.
+    liberarTodos: false,
+
+    // Envio do progresso para a sua Planilha Google.
+    // Cole aqui a URL do Apps Script (termina em /exec).
+    // Deixe vazio para o app não enviar nada nem pedir consentimento.
+    sheetUrl: 'https://script.google.com/macros/s/AKfycbxUMBuIG7oXcu73NYh8O4rr9EK8Bqy-T4_DF5GI1ZJrVQrg37FDJTqtzLTlm9pQKKc6/exec',
+    responsavel: 'Raiz do Sentir',
+    // Convite para o seu atendimento (aparece no encerramento e no PDF)
+    terapeutaNome: 'Jefferson Delgado',
+    terapeutaCredenciais: 'Afiliado à ABP, Master TRG, Hipnoterapeuta Clínico e PNL',
+    siteUrl: 'https://raizdosentir.com',
+    // Seu número de WhatsApp para quem pedir acompanhamento: só dígitos, com DDI.
+    // Exemplo Reino Unido: 447700900000. Vazio = o botão leva para o site.
+    whatsappContato: '',
+    jspdfUrl: 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js',
+    retencaoDias: 90
+  };
+
+  /* =========================================================
+     CONTEÚDO DOS 7 DIAS
+     ========================================================= */
+  const DAYS = [
+    {
+      title: 'Perceber a aceleração',
+      desc: 'Você não desacelera aquilo que não percebe. Hoje o foco é notar como a ansiedade aparece no seu corpo e no ritmo dos seus pensamentos, sem tentar corrigir nada ainda. Observar já é o primeiro freio.',
+      prompt: 'Onde a aceleração apareceu no seu corpo hoje? O que mudou depois da respiração?',
+      exercise: {
+        title: 'Respiração 4-6 (expiração longa)', duration: '3 min',
+        steps: [
+          'Sente-se com os pés apoiados no chão e uma mão sobre a barriga.',
+          'Inspire pelo nariz contando até 4.',
+          'Solte o ar pela boca bem devagar contando até 6, como se soprasse uma vela sem apagá-la.',
+          'Repita por 3 minutos. Se perder a contagem, apenas recomece.',
+          'Ao final, repare em uma diferença, por menor que seja.'
+        ]
+      }
+    },
+    {
+      title: 'O corpo como âncora',
+      desc: 'Quando a mente acelera, ela vive no futuro. O corpo só existe no agora. Hoje você aprende a usar os sentidos para trazer a atenção de volta ao presente.',
+      prompt: 'Qual dos sentidos te trouxe mais rápido para o presente?',
+      exercise: {
+        title: 'Aterramento 5-4-3-2-1', duration: '5 min',
+        steps: [
+          'Nomeie, em voz baixa, 5 coisas que você consegue ver.',
+          'Encontre 4 coisas que você pode tocar e toque nelas com atenção.',
+          'Perceba 3 sons ao seu redor, dos mais altos aos mais sutis.',
+          'Identifique 2 cheiros, ou lembre de 2 cheiros de que você gosta.',
+          'Termine com 1 sabor, ou 1 coisa boa sobre este exato momento.'
+        ]
+      }
+    },
+    {
+      title: 'Nomear para acalmar',
+      desc: 'Dar nome ao que você sente diminui a intensidade da emoção. Não é mágica, é regulação: quando você descreve, sai do modo alarme e entra no modo observação.',
+      prompt: 'Que nome você deu ao que sentiu hoje? Ele mudou depois de escrito?',
+      exercise: {
+        title: 'Rotulação emocional', duration: '5 min',
+        steps: [
+          'Pare por um instante e pergunte: o que estou sentindo agora?',
+          'Complete por escrito: “Estou percebendo que sinto...”.',
+          'Dê uma nota de 0 a 10 para a intensidade desse sentimento.',
+          'Complete: “No meu corpo, isso aparece como...”.',
+          'Releia em voz alta, no tom que você usaria com um amigo querido.'
+        ]
+      }
+    },
+    {
+      title: 'Pensamento não é fato',
+      desc: 'A mente ansiosa produz previsões e trata essas previsões como certezas. Hoje você vai criar distância entre você e o pensamento, para que ele deixe de dar ordens.',
+      prompt: 'Qual pensamento perdeu força quando você o reescreveu?',
+      exercise: {
+        title: 'Desfusão: “Estou tendo o pensamento de que...”', duration: '5 min',
+        steps: [
+          'Escreva o pensamento que mais tem acelerado você hoje.',
+          'Reescreva começando com: “Estou tendo o pensamento de que...”.',
+          'Agora reescreva com: “Percebo que minha mente está me dizendo que...”.',
+          'Repare se o pensamento perde um pouco da força ou da urgência.',
+          'Pergunte a si mesmo: que evidências reais eu tenho disso, agora?'
+        ]
+      }
+    },
+    {
+      title: 'A hora da preocupação',
+      desc: 'Tentar não se preocupar costuma piorar a preocupação. Hoje você dá a ela um horário marcado, para que pare de invadir o seu dia inteiro.',
+      prompt: 'O que estava na sua lista de preocupações? O que realmente dependia de você?',
+      exercise: {
+        title: 'Janela de preocupação', duration: '15 min',
+        steps: [
+          'Escolha um horário fixo para hoje, longe da hora de dormir.',
+          'Durante o dia, quando uma preocupação surgir, anote em uma linha e diga: “Vejo você no horário marcado”.',
+          'No horário combinado, use 15 minutos para revisar a lista.',
+          'Separe o que você pode resolver do que não depende de você.',
+          'Para o que depende de você, defina um único próximo passo.'
+        ]
+      }
+    },
+    {
+      title: 'Desacelerar o ritmo',
+      desc: 'Ansiedade e pressa se alimentam uma da outra. Quando você muda a velocidade do corpo, a mente costuma acompanhar. Hoje o treino é fazer menos coisas, mais devagar.',
+      prompt: 'O que você percebeu ao fazer algo na metade da velocidade?',
+      exercise: {
+        title: 'Uma tarefa em câmera lenta', duration: '10 min',
+        steps: [
+          'Escolha uma tarefa simples: lavar a louça, tomar um café ou caminhar.',
+          'Faça na metade da velocidade habitual.',
+          'Preste atenção em temperatura, textura, peso e som.',
+          'Quando a mente fugir para a lista de pendências, volte gentilmente para a tarefa.',
+          'Ao final, anote o que mudou no seu ritmo interno.'
+        ]
+      }
+    },
+    {
+      title: 'Seu kit de bolso',
+      desc: 'Desacelerar não é um evento, é uma habilidade. Hoje você revisa a semana, escolhe o que funcionou melhor para você e monta um plano simples para os momentos difíceis.',
+      prompt: 'Qual é o seu plano de desaceleração? Escreva para o seu eu do futuro.',
+      exercise: {
+        title: 'Plano de desaceleração pessoal', duration: '10 min',
+        steps: [
+          'Olhe o seu gráfico: em qual dia o alívio foi maior?',
+          'Escolha as 2 ou 3 técnicas que mais funcionaram para você.',
+          'Escreva em quais situações vai usar cada uma.',
+          'Complete: “Quando eu perceber ___, eu vou ___”.',
+          'Guarde esse plano no celular ou num papel na carteira.'
+        ]
+      }
+    }
+  ];
+
+  const TOTAL = DAYS.length;
+  const GAD_SLOT = TOTAL + 1; // posição usada na fila de envio para o encerramento
+
+  /* =========================================================
+     GAD-7 (questionário de rastreio, uso livre)
+     ========================================================= */
+  const GAD_ITEMS = [
+    'Sentir-se nervoso(a), ansioso(a) ou muito tenso(a)',
+    'Não ser capaz de impedir ou de controlar as preocupações',
+    'Preocupar-se muito com diversas coisas',
+    'Dificuldade para relaxar',
+    'Ficar tão agitado(a) que se torna difícil permanecer sentado(a)',
+    'Ficar facilmente aborrecido(a) ou irritado(a)',
+    'Sentir medo como se algo horrível fosse acontecer'
+  ];
+  const GAD_OPTS = ['Nenhuma vez', 'Vários dias', 'Mais da metade dos dias', 'Quase todos os dias'];
+
+  function gadBand(total) {
+    if (total <= 4) return {
+      label: 'Faixa mínima', recommend: false,
+      badge: 'bg-emerald-100 text-emerald-800', card: 'border-emerald-200 bg-emerald-50/60', score: 'text-emerald-700', rgb: [16, 185, 129], light: [236, 253, 245],
+      text: 'Nas últimas duas semanas, seus sinais de ansiedade ficaram na faixa mínima. Continue usando o seu kit de bolso. Se algo mudar, não espere para pedir ajuda.'
+    };
+    if (total <= 9) return {
+      label: 'Faixa leve', recommend: false,
+      badge: 'bg-sky-100 text-sky-800', card: 'border-sky-200 bg-sky-50/60', score: 'text-sky-700', rgb: [2, 132, 199], light: [240, 249, 255],
+      text: 'Nas últimas duas semanas, seus sinais de ansiedade ficaram na faixa leve. As técnicas do desafio podem continuar ajudando. Se os sintomas persistirem ou atrapalharem sua rotina, vale conversar com um profissional.'
+    };
+    if (total <= 14) return {
+      label: 'Faixa moderada', recommend: true,
+      badge: 'bg-amber-100 text-amber-800', card: 'border-amber-200 bg-amber-50/60', score: 'text-amber-700', rgb: [217, 119, 6], light: [255, 251, 235],
+      text: 'Nas últimas duas semanas, seus sinais de ansiedade ficaram na faixa moderada. Nesta faixa, a recomendação é buscar uma avaliação com um profissional de saúde mental.'
+    };
+    return {
+      label: 'Faixa grave', recommend: true,
+      badge: 'bg-rose-100 text-rose-800', card: 'border-rose-200 bg-rose-50/60', score: 'text-rose-700', rgb: [225, 29, 72], light: [255, 241, 242],
+      text: 'Nas últimas duas semanas, seus sinais de ansiedade ficaram na faixa grave. Recomendamos procurar uma avaliação com um profissional de saúde mental o quanto antes.'
+    };
+  }
+
+  /* =========================================================
+     ARMAZENAMENTO (com fallback em memória)
+     ========================================================= */
+  const Store = (function () {
+    let available = true;
+    let memory = null;
+    try {
+      const k = '__ddt_test__';
+      window.localStorage.setItem(k, '1');
+      window.localStorage.removeItem(k);
+    } catch (e) { available = false; }
+
+    return {
+      available: available,
+      load: function () {
+        if (!available) return memory;
+        try {
+          const raw = window.localStorage.getItem(CONFIG.storageKey);
+          return raw ? JSON.parse(raw) : null;
+        } catch (e) { return null; }
+      },
+      save: function (data) {
+        memory = data;
+        if (!available) return false;
+        try { window.localStorage.setItem(CONFIG.storageKey, JSON.stringify(data)); return true; }
+        catch (e) { return false; }
+      },
+      clear: function () {
+        memory = null;
+        if (!available) return;
+        try { window.localStorage.removeItem(CONFIG.storageKey); } catch (e) { /* ignora */ }
+      }
+    };
+  })();
+
+  /* =========================================================
+     ESTADO
+     ========================================================= */
+  function freshState() {
+    return {
+      version: 1,
+      selected: 1,
+      aluno: null,
+      pendentes: [],
+      gad0: null,
+      gad: null,
+      acompanhamento: null,
+      days: Array.from({ length: TOTAL }, function () {
+        return { done: false, doneAt: null, antes: null, depois: null, nota: '' };
+      })
+    };
+  }
+
+  function validScore(v) {
+    return Number.isInteger(v) && v >= 1 && v <= 10 ? v : null;
+  }
+
+  function cleanName(v) {
+    return String(v || '').replace(/\s+/g, ' ').trim().slice(0, 40);
+  }
+
+  function validAluno(a) {
+    if (!a || typeof a !== 'object') return null;
+    if (typeof a.id !== 'string' || !/^[a-z0-9-]{8,64}$/i.test(a.id)) return null;
+    const nome = cleanName(a.nome);
+    if (!nome) return null;
+    return { id: a.id, nome: nome, consent: !!a.consent };
+  }
+
+  function newId() {
+    try { if (window.crypto && crypto.randomUUID) return crypto.randomUUID(); } catch (e) { /* segue */ }
+    let s = '';
+    for (let i = 0; i < 32; i++) s += Math.floor(Math.random() * 16).toString(16);
+    return s.slice(0, 8) + '-' + s.slice(8, 12) + '-' + s.slice(12, 16) + '-' + s.slice(16, 20) + '-' + s.slice(20);
+  }
+
+  function validGad(g) {
+    if (!g || !Array.isArray(g.answers) || g.answers.length !== 7) return null;
+    if (!g.answers.every(function (a) { return Number.isInteger(a) && a >= 0 && a <= 3; })) return null;
+    const total = g.answers.reduce(function (a, b) { return a + b; }, 0);
+    const at = typeof g.at === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(g.at) ? g.at : null;
+    return { answers: g.answers.slice(), total: total, at: at };
+  }
+
+  function normalize(saved) {
+    const base = freshState();
+    if (!saved || !Array.isArray(saved.days)) return base;
+    const sel = parseInt(saved.selected, 10);
+    base.selected = sel >= 1 && sel <= TOTAL ? sel : 1;
+    base.aluno = validAluno(saved.aluno);
+    base.gad0 = validGad(saved.gad0);
+    base.gad = validGad(saved.gad);
+    base.acompanhamento = saved.acompanhamento === 'sim' || saved.acompanhamento === 'nao' ? saved.acompanhamento : null;
+    if (Array.isArray(saved.pendentes)) {
+      base.pendentes = saved.pendentes.filter(function (n, i, arr) {
+        return Number.isInteger(n) && n >= 1 && n <= GAD_SLOT && arr.indexOf(n) === i;
+      });
+    }
+    saved.days.slice(0, TOTAL).forEach(function (d, i) {
+      if (!d || typeof d !== 'object') return;
+      base.days[i] = {
+        done: !!d.done,
+        doneAt: d.done && typeof d.doneAt === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d.doneAt) ? d.doneAt : null,
+        antes: validScore(d.antes),
+        depois: validScore(d.depois),
+        nota: typeof d.nota === 'string' ? d.nota : ''
+      };
+    });
+    return base;
+  }
+
+  let state = normalize(Store.load());
+
+  function currentDay() { return state.days[state.selected - 1]; }
+
+  /* =========================================================
+     CÁLCULOS
+     ========================================================= */
+  function reliefOf(d) {
+    if (d.antes == null || d.depois == null) return null;
+    return ((d.antes - d.depois) / d.antes) * 100;
+  }
+
+  function averageRelief() {
+    const vals = state.days.map(reliefOf).filter(function (v) { return v !== null; });
+    if (!vals.length) return { value: null, count: 0 };
+    const sum = vals.reduce(function (a, b) { return a + b; }, 0);
+    return { value: sum / vals.length, count: vals.length };
+  }
+
+  function activeDayIndex() {
+    const i = state.days.findIndex(function (d) { return !d.done; });
+    return i === -1 ? TOTAL : i + 1;
+  }
+
+  /* =========================================================
+     LIBERAÇÃO POR RITMO DO ALUNO
+     Dia 1 sempre aberto. Cada dia seguinte abre quando o anterior
+     foi concluído E já virou o dia no calendário do aparelho.
+     Um dia que já tem registros nunca volta a fechar.
+     ========================================================= */
+  function pad2(n) { return String(n).padStart(2, '0'); }
+
+  function todayKey() {
+    const d = new Date();
+    return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+  }
+
+  function dayHasData(d) {
+    return !!d && (d.done || d.antes != null || d.depois != null || (d.nota && d.nota.trim().length > 0));
+  }
+
+  function needsBaseline() {
+    return !CONFIG.liberarTodos && !state.gad0 && !dayHasData(state.days[0]);
+  }
+
+  function lockInfo(n) {
+    if (CONFIG.liberarTodos) return null;
+    if (n <= 1) return needsBaseline() ? { reason: 'baseline' } : null;
+    const d = state.days[n - 1];
+    if (dayHasData(d)) return null;
+    const prev = state.days[n - 2];
+    if (!prev.done) return { reason: 'prev' };
+    if (prev.doneAt && prev.doneAt >= todayKey()) return { reason: 'tomorrow' };
+    return null;
+  }
+
+  function defaultDay() {
+    const active = activeDayIndex();
+    if (!lockInfo(active)) return active;
+    return Math.max(1, active - 1);
+  }
+
+  function completedCount() {
+    return state.days.filter(function (d) { return d.done; }).length;
+  }
+
+  /* =========================================================
+     UTILIDADES DE DOM
+     ========================================================= */
+  const $ = function (id) { return document.getElementById(id); };
+
+  const ICON_CHECK = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>';
+
+  const ICON_LOCK = '<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+
+  function setClasses(el, classes) { el.className = classes; }
+
+  /* =========================================================
+     SALVAMENTO + FEEDBACK
+     ========================================================= */
+  let saveTimer = null;
+  let statusTimer = null;
+
+  function persist() {
+    Store.save(state);
+    const status = $('saveStatus');
+    status.textContent = Store.available ? 'Salvo automaticamente' : 'Salvo só nesta sessão';
+    clearTimeout(statusTimer);
+    statusTimer = setTimeout(function () { status.textContent = ''; }, 2200);
+  }
+
+  function persistDebounced() {
+    $('saveStatus').textContent = 'Salvando...';
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(persist, 450);
+  }
+
+  /* =========================================================
+     RENDER: MÉTRICAS
+     ========================================================= */
+  function renderMetrics() {
+    const done = completedCount();
+    const pct = Math.round((done / TOTAL) * 100);
+    $('mProgress').textContent = pct + '%';
+    $('mProgressBar').style.width = pct + '%';
+    $('mProgressSub').textContent = done + ' de ' + TOTAL + (done === 1 ? ' dia concluído' : ' dias concluídos');
+
+    const avg = averageRelief();
+    const reliefEl = $('mRelief');
+    const reliefSub = $('mReliefSub');
+    if (avg.value === null) {
+      reliefEl.textContent = '0%';
+      reliefEl.className = 'mt-2 text-3xl font-extrabold text-slate-300';
+      reliefSub.textContent = 'Alívio médio após a técnica. Preencha os dois medidores de um dia para calcular.';
+    } else {
+      const r = Math.round(avg.value);
+      const base = avg.count + (avg.count === 1 ? ' dia registrado' : ' dias registrados');
+      if (r >= 0) {
+        reliefEl.textContent = r + '%';
+        reliefEl.className = 'mt-2 text-3xl font-extrabold ' + (r > 0 ? 'text-emerald-600' : 'text-slate-900');
+        reliefSub.textContent = 'Alívio médio após a técnica, com base em ' + base + '.';
+      } else {
+        reliefEl.textContent = '+' + Math.abs(r) + '%';
+        reliefEl.className = 'mt-2 text-3xl font-extrabold text-amber-600';
+        reliefSub.textContent = 'A aceleração subiu na média (' + base + '). Isso também é informação: continue praticando.';
+      }
+    }
+
+    const active = activeDayIndex();
+    const allDone = done === TOTAL;
+    $('mFocus').textContent = allDone ? 'Concluído' : 'Dia ' + active;
+    $('mFocus').className = 'mt-2 text-3xl font-extrabold ' + (allDone ? 'text-emerald-600' : 'text-slate-900');
+    const activeLock = allDone ? null : lockInfo(active);
+    if (allDone) {
+      $('mFocusSub').textContent = 'Você completou os 7 dias. Revise seu gráfico e seu kit de bolso.';
+    } else if (activeLock && activeLock.reason === 'tomorrow') {
+      $('mFocusSub').textContent = 'Abre amanhã: ' + DAYS[active - 1].title + '. Hoje é dia de deixar a prática assentar.';
+    } else {
+      $('mFocusSub').textContent = 'Tema de hoje: ' + DAYS[active - 1].title + '.';
+    }
+    $('mFocusGo').classList.toggle('hidden', allDone || !!activeLock || state.selected === active);
+  }
+
+  /* =========================================================
+     RENDER: ABAS
+     ========================================================= */
+  function renderTabs() {
+    const active = activeDayIndex();
+    const wrap = $('tabs');
+    wrap.innerHTML = '';
+    state.days.forEach(function (d, i) {
+      const n = i + 1;
+      const selected = n === state.selected;
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.setAttribute('role', 'tab');
+      btn.setAttribute('aria-selected', selected ? 'true' : 'false');
+      const locked = !!lockInfo(n);
+      btn.setAttribute('aria-label', 'Dia ' + n + (d.done ? ', concluído' : (locked ? ', bloqueado' : '')));
+      btn.dataset.day = String(n);
+
+      let cls = 'relative min-w-[64px] flex-1 flex flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-2.5 text-xs font-semibold transition border ';
+      if (selected) cls += 'bg-indigo-600 border-indigo-600 text-white shadow-sm';
+      else if (d.done) cls += 'bg-emerald-50 border-emerald-200 text-emerald-700 hover:bg-emerald-100';
+      else if (locked) cls += 'bg-slate-50 border-transparent text-slate-300 hover:text-slate-400';
+      else cls += 'bg-white border-transparent text-slate-500 hover:bg-slate-50 hover:text-slate-800';
+      btn.className = cls;
+
+      const label = '<span class="uppercase tracking-wide text-[10px] opacity-80">Dia</span>';
+      const num = d.done
+        ? '<span class="flex items-center justify-center w-6 h-6 rounded-full ' + (selected ? 'bg-white/20' : 'bg-emerald-500 text-white') + '">' + ICON_CHECK + '</span>'
+        : locked
+          ? '<span class="flex items-center justify-center w-6 h-6">' + ICON_LOCK + '</span>'
+          : '<span class="text-base font-bold leading-6">' + n + '</span>';
+      const dot = (!d.done && !locked && n === active && !selected)
+        ? '<span class="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-indigo-500"></span>' : '';
+      btn.innerHTML = label + num + dot;
+      wrap.appendChild(btn);
+    });
+
+    const sel = wrap.querySelector('[aria-selected="true"]');
+    if (sel && wrap.scrollWidth > wrap.clientWidth) {
+      wrap.scrollTo({ left: sel.offsetLeft - wrap.clientWidth / 2 + sel.clientWidth / 2, behavior: 'smooth' });
+    }
+  }
+
+  /* =========================================================
+     RENDER: PAINEL DO DIA
+     ========================================================= */
+  const MIN_NOTA = 10;
+
+  function missingFor(d) {
+    const falta = [];
+    if (d.antes == null) falta.push('medidor antes');
+    if (d.depois == null) falta.push('medidor depois');
+    if (!d.nota || d.nota.replace(/\s+/g, '').length < MIN_NOTA) falta.push('reflexão');
+    return falta;
+  }
+
+  function joinPt(list) {
+    if (list.length <= 1) return list.join('');
+    return list.slice(0, -1).join(', ') + ' e ' + list[list.length - 1];
+  }
+
+  function renderDoneButton() {
+    const d = currentDay();
+    const btn = $('doneBtn');
+    const hint = $('doneHint');
+    const falta = d.done ? [] : missingFor(d);
+    btn.disabled = falta.length > 0;
+    if (falta.length) {
+      hint.textContent = 'Para concluir, falta: ' + joinPt(falta) + '.';
+      hint.classList.remove('hidden');
+    } else {
+      hint.classList.add('hidden');
+    }
+    if (d.done) {
+      btn.innerHTML = ICON_CHECK + '<span>Dia Concluído</span>';
+      setClasses(btn, 'w-full inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold px-4 py-3 transition bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100');
+      btn.setAttribute('aria-pressed', 'true');
+      btn.title = 'Clique para desmarcar';
+    } else {
+      btn.innerHTML = '<span class="w-4 h-4 rounded-full border-2 border-white/70"></span><span>Marcar como Concluído</span>';
+      setClasses(btn, 'w-full inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold px-4 py-3 transition shadow-sm ' +
+        (falta.length ? 'bg-slate-200 text-slate-400 cursor-not-allowed shadow-none' : 'bg-indigo-600 text-white hover:bg-indigo-700'));
+      btn.setAttribute('aria-pressed', 'false');
+      btn.title = '';
+    }
+  }
+
+  function paintSlider(key) {
+    const d = currentDay();
+    const input = $(key);
+    const val = d[key];
+    const color = key === 'antes' ? '#4f46e5' : '#10b981';
+    const valEl = $(key + 'Val');
+    const hint = $(key + 'Hint');
+    const clearBtn = document.querySelector('[data-clear="' + key + '"]');
+
+    if (val === null) {
+      input.value = 5;
+      input.classList.add('is-empty');
+      input.style.background = '#e2e8f0';
+      valEl.textContent = 'não registrado';
+      valEl.className = 'text-sm font-bold text-slate-400';
+      hint.textContent = 'Arraste para registrar';
+      clearBtn.classList.add('hidden');
+    } else {
+      input.value = val;
+      input.classList.remove('is-empty');
+      const p = ((val - 1) / 9) * 100;
+      input.style.background = 'linear-gradient(to right, ' + color + ' 0%, ' + color + ' ' + p + '%, #e2e8f0 ' + p + '%, #e2e8f0 100%)';
+      valEl.textContent = val + ' / 10';
+      valEl.className = 'text-sm font-bold ' + (key === 'antes' ? 'text-indigo-700' : 'text-emerald-700');
+      hint.textContent = 'Registrado';
+      clearBtn.classList.toggle('hidden', d.done);
+    }
+  }
+
+  function renderLockState() {
+    const n = state.selected;
+    const lock = lockInfo(n);
+    ['exerciseCard', 'meterBlock', 'noteBlock', 'doneWrap'].forEach(function (id) {
+      $(id).classList.toggle('hidden', !!lock);
+    });
+    $('lockedCard').classList.toggle('hidden', !lock);
+
+    if (lock) {
+      const go = defaultDay();
+      if (lock.reason === 'baseline') {
+        $('lockedTitle').textContent = 'Primeiro, o seu ponto de partida';
+        $('lockedText').textContent = 'Antes do Dia 1, responda o questionário inicial logo acima. Leva 1 minuto e é o que permite comparar a sua semana no final.';
+      } else if (lock.reason === 'tomorrow') {
+        $('lockedTitle').textContent = 'Disponível amanhã';
+        $('lockedText').textContent = 'Você concluiu o Dia ' + (n - 1) + ' hoje. Agora é deixar a prática assentar. O Dia ' + n + ' abre amanhã, no seu ritmo.';
+      } else {
+        $('lockedTitle').textContent = 'Este dia ainda está fechado';
+        $('lockedText').textContent = 'Conclua o Dia ' + (n - 1) + ' para liberar. Um dia por vez é o que transforma a técnica em hábito.';
+      }
+      if (lock.reason === 'baseline') {
+        $('lockedGo').textContent = 'Responder agora';
+        $('lockedGo').dataset.go = 'baseline';
+      } else {
+        $('lockedGo').textContent = 'Ir para o Dia ' + go;
+        $('lockedGo').dataset.go = String(go);
+      }
+    }
+
+    const d = currentDay();
+    const note = $('doneNote');
+    const doneToday = !lock && d.done && d.doneAt === todayKey();
+    if (doneToday && n === TOTAL) {
+      note.textContent = 'Você concluiu o desafio. Volte ao gráfico e repare no caminho que você fez nesta semana.';
+      note.classList.remove('hidden');
+    } else if (doneToday && lockInfo(n + 1)) {
+      note.textContent = 'Dia concluído. O Dia ' + (n + 1) + ' abre amanhã. Se a aceleração voltar até lá, repita o exercício de hoje.';
+      note.classList.remove('hidden');
+    } else {
+      note.classList.add('hidden');
+    }
+  }
+
+  function renderDayRelief() {
+    const r = reliefOf(currentDay());
+    const el = $('dayRelief');
+    if (r === null) { el.classList.add('hidden'); return; }
+    el.classList.remove('hidden');
+    const v = Math.round(r);
+    if (v > 0) {
+      el.textContent = 'Alívio de hoje: ' + v + '%';
+      el.className = 'text-xs font-semibold rounded-full px-2.5 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200';
+    } else if (v === 0) {
+      el.textContent = 'Sem variação hoje';
+      el.className = 'text-xs font-semibold rounded-full px-2.5 py-1 bg-slate-100 text-slate-600 border border-slate-200';
+    } else {
+      el.textContent = 'Aceleração subiu ' + Math.abs(v) + '%';
+      el.className = 'text-xs font-semibold rounded-full px-2.5 py-1 bg-amber-50 text-amber-700 border border-amber-200';
+    }
+  }
+
+  function renderDay() {
+    const n = state.selected;
+    const content = DAYS[n - 1];
+    const d = currentDay();
+
+    $('dayKicker').textContent = 'Dia ' + n + ' de ' + TOTAL;
+    $('dayTitle').textContent = content.title;
+    $('dayDesc').textContent = content.desc;
+    $('exTitle').textContent = content.exercise.title;
+    $('exDuration').textContent = content.exercise.duration;
+    $('notaPrompt').textContent = content.prompt;
+
+    const ol = $('exSteps');
+    ol.innerHTML = '';
+    content.exercise.steps.forEach(function (s, i) {
+      const li = document.createElement('li');
+      li.className = 'flex gap-3';
+      const badge = document.createElement('span');
+      badge.className = 'shrink-0 w-6 h-6 rounded-full bg-white border border-emerald-200 text-emerald-700 text-xs font-bold flex items-center justify-center';
+      badge.textContent = String(i + 1);
+      const txt = document.createElement('span');
+      txt.className = 'pt-0.5 leading-relaxed';
+      txt.textContent = s;
+      li.appendChild(badge);
+      li.appendChild(txt);
+      ol.appendChild(li);
+    });
+
+    renderDoneButton();
+    paintSlider('antes');
+    paintSlider('depois');
+    renderDayRelief();
+    $('nota').value = d.nota;
+    renderLockState();
+
+    $('prevBtn').disabled = n === 1;
+    $('nextBtn').disabled = n === TOTAL;
+
+    const panel = $('dayPanel');
+    panel.classList.remove('fade-in');
+    void panel.offsetWidth;
+    panel.classList.add('fade-in');
+  }
+
+  /* =========================================================
+     RENDER: GRÁFICO SVG
+     ========================================================= */
+  function renderChart() {
+    const W = 640, H = 270, L = 40, R = 22, T = 26, B = 40;
+    const x = function (i) { return L + i * (W - L - R) / (TOTAL - 1); };
+    const y = function (v) { return T + (10 - v) * (H - T - B) / 9; };
+    let s = '';
+
+    // destaque do dia selecionado
+    const sx = x(state.selected - 1);
+    s += '<rect x="' + (sx - 24) + '" y="' + (T - 14) + '" width="48" height="' + (H - T - B + 28) + '" rx="12" fill="#eef2ff"/>';
+
+    // grade horizontal
+    [1, 3, 5, 7, 10].forEach(function (v) {
+      s += '<line x1="' + L + '" x2="' + (W - R) + '" y1="' + y(v) + '" y2="' + y(v) + '" stroke="#e2e8f0" stroke-dasharray="4 5"/>';
+      s += '<text x="' + (L - 12) + '" y="' + (y(v) + 4) + '" text-anchor="end" font-size="11" fill="#94a3b8" font-family="Inter, sans-serif">' + v + '</text>';
+    });
+
+    // rótulos dos dias
+    state.days.forEach(function (d, i) {
+      const sel = i + 1 === state.selected;
+      s += '<text x="' + x(i) + '" y="' + (H - 12) + '" text-anchor="middle" font-size="12" font-family="Inter, sans-serif" font-weight="' + (sel ? 700 : 500) + '" fill="' + (sel ? '#4338ca' : (d.done ? '#059669' : '#94a3b8')) + '">Dia ' + (i + 1) + '</text>';
+    });
+
+    const series = [
+      { key: 'antes', color: '#4f46e5', name: 'Antes' },
+      { key: 'depois', color: '#10b981', name: 'Depois' }
+    ];
+
+    let hasData = false;
+
+    series.forEach(function (sr) {
+      const pts = [];
+      state.days.forEach(function (d, i) {
+        if (d[sr.key] !== null) pts.push({ i: i, v: d[sr.key], px: x(i), py: y(d[sr.key]) });
+      });
+      if (!pts.length) return;
+      hasData = true;
+
+      if (pts.length > 1) {
+        const line = pts.map(function (p) { return p.px + ',' + p.py; }).join(' ');
+        s += '<polyline points="' + line + '" fill="none" stroke="' + sr.color + '" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.9"/>';
+      }
+
+      pts.forEach(function (p) {
+        const sel = p.i + 1 === state.selected;
+        s += '<g data-day="' + (p.i + 1) + '" style="cursor:pointer">';
+        s += '<circle cx="' + p.px + '" cy="' + p.py + '" r="14" fill="transparent"/>';
+        s += '<circle class="pt" cx="' + p.px + '" cy="' + p.py + '" r="' + (sel ? 7 : 5.5) + '" fill="' + (sel ? sr.color : '#ffffff') + '" stroke="' + sr.color + '" stroke-width="3"/>';
+        s += '<title>Dia ' + (p.i + 1) + ', ' + sr.name + ' da técnica: ' + p.v + '/10</title>';
+        s += '</g>';
+      });
+    });
+
+    // valores do dia selecionado
+    const d = currentDay();
+    if (d.antes !== null || d.depois !== null) {
+      const labels = [];
+      if (d.antes !== null) labels.push({ v: d.antes, c: '#4338ca' });
+      if (d.depois !== null) labels.push({ v: d.depois, c: '#047857' });
+      labels.forEach(function (lb, idx) {
+        let ly = y(lb.v) - 12;
+        if (labels.length === 2 && labels[0].v === labels[1].v) ly = idx === 0 ? y(lb.v) - 12 : y(lb.v) + 22;
+        else if (labels.length === 2 && idx === 1 && lb.v < labels[0].v) ly = y(lb.v) + 22;
+        else if (labels.length === 2 && idx === 0 && labels[1].v > lb.v) ly = y(lb.v) + 22;
+        if (ly < 12) ly = y(lb.v) + 22;
+        s += '<text x="' + (sx + 12) + '" y="' + ly + '" font-size="11" font-weight="700" font-family="Inter, sans-serif" fill="' + lb.c + '">' + lb.v + '</text>';
+      });
+    }
+
+    $('chart').innerHTML = s;
+    $('chartEmpty').classList.toggle('hidden', hasData);
+  }
+
+  /* =========================================================
+     RENDER GERAL
+     ========================================================= */
+  function renderAll() {
+    renderOnboarding();
+    renderBaseline();
+    renderMetrics();
+    renderTabs();
+    renderDay();
+    renderChart();
+    renderFinal();
+    postHeight();
+  }
+
+  function selectDay(n) {
+    if (n < 1 || n > TOTAL || n === state.selected) return;
+    flushNote();
+    state.selected = n;
+    persist();
+    renderAll();
+  }
+
+  function flushNote() {
+    if (saveTimer) { clearTimeout(saveTimer); saveTimer = null; persist(); }
+  }
+
+  /* =========================================================
+     EVENTOS
+     ========================================================= */
+  function bindEvents() {
+    $('tabs').addEventListener('click', function (e) {
+      const btn = e.target.closest('[data-day]');
+      if (btn) selectDay(parseInt(btn.dataset.day, 10));
+    });
+
+    $('tabs').addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { selectDay(state.selected + 1); focusSelectedTab(); }
+      if (e.key === 'ArrowLeft') { selectDay(state.selected - 1); focusSelectedTab(); }
+    });
+
+    $('chart').addEventListener('click', function (e) {
+      const g = e.target.closest('[data-day]');
+      if (!g) return;
+      selectDay(parseInt(g.getAttribute('data-day'), 10));
+      $('dayPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    $('prevBtn').addEventListener('click', function () { selectDay(state.selected - 1); });
+    $('nextBtn').addEventListener('click', function () { selectDay(state.selected + 1); });
+    $('mFocusGo').addEventListener('click', function () { selectDay(activeDayIndex()); });
+    $('lockedGo').addEventListener('click', function () {
+      const go = $('lockedGo').dataset.go;
+      if (go === 'baseline') { $('baselineSection').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+      selectDay(parseInt(go, 10));
+    });
+
+    $('doneBtn').addEventListener('click', function () {
+      const d = currentDay();
+      if (!d.done && missingFor(d).length) { renderDoneButton(); return; }
+      d.done = !d.done;
+      d.doneAt = d.done ? todayKey() : null;
+      persist();
+      Sync.queue(state.selected);
+      renderMetrics();
+      renderTabs();
+      renderDoneButton();
+      paintSlider('antes');
+      paintSlider('depois');
+      renderLockState();
+      renderChart();
+      renderFinal();
+      postHeight();
+    });
+
+    ['antes', 'depois'].forEach(function (key) {
+      const input = $(key);
+      const commit = function () {
+        currentDay()[key] = parseInt(input.value, 10);
+        paintSlider(key);
+        renderDayRelief();
+        renderMetrics();
+        renderChart();
+        persist();
+        renderDoneButton();
+        Sync.queue(state.selected);
+      };
+      input.addEventListener('input', commit);
+      // registra também quando o aluno toca no valor padrão sem arrastar
+      input.addEventListener('change', commit);
+      input.addEventListener('pointerup', function () { if (currentDay()[key] === null) commit(); });
+    });
+
+    document.querySelectorAll('[data-clear]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        const key = btn.getAttribute('data-clear');
+        if (currentDay().done) return;
+        currentDay()[key] = null;
+        renderDoneButton();
+        paintSlider(key);
+        renderDayRelief();
+        renderMetrics();
+        renderChart();
+        persist();
+        Sync.queue(state.selected);
+      });
+    });
+
+    $('nota').addEventListener('input', function (e) {
+      currentDay().nota = e.target.value;
+      renderDoneButton();
+      persistDebounced();
+    });
+    $('nota').addEventListener('blur', flushNote);
+
+    // reinício com confirmação inline (sem confirm(), que é bloqueado em alguns iframes)
+    const resetBtn = $('resetBtn');
+    const resetConfirm = $('resetConfirm');
+    let resetTimer = null;
+    const hideConfirm = function () {
+      resetConfirm.classList.add('hidden');
+      resetConfirm.classList.remove('flex');
+      resetBtn.classList.remove('hidden');
+      clearTimeout(resetTimer);
+    };
+    resetBtn.addEventListener('click', function () {
+      resetBtn.classList.add('hidden');
+      resetConfirm.classList.remove('hidden');
+      resetConfirm.classList.add('flex');
+      resetTimer = setTimeout(hideConfirm, 8000);
+      postHeight();
+    });
+    $('resetNo').addEventListener('click', hideConfirm);
+    $('resetYes').addEventListener('click', function () {
+      const aluno = state.aluno;
+      if (Sync.enabled()) Sync.forget();
+      Store.clear();
+      state = freshState();
+      state.aluno = aluno;
+      gadEditing = false;
+      drafts.base = [null, null, null, null, null, null, null];
+      drafts.final = [null, null, null, null, null, null, null];
+      persist();
+      lastDayKey = todayKey();
+      hideConfirm();
+      $('exportArea').classList.add('hidden');
+      $('exportCode').value = '';
+      $('exportBtn').textContent = 'Gerar meu código';
+      renderAll();
+      $('app').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    window.addEventListener('beforeunload', flushNote);
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { flushNote(); return; }
+      checkNewDay();
+    });
+    window.addEventListener('focus', checkNewDay);
+  }
+
+  let lastDayKey = todayKey();
+  function checkNewDay() {
+    const k = todayKey();
+    if (k === lastDayKey) return;
+    lastDayKey = k;
+    if (lockInfo(state.selected) === null) { renderAll(); return; }
+    state.selected = defaultDay();
+    renderAll();
+  }
+
+  function focusSelectedTab() {
+    const sel = $('tabs').querySelector('[aria-selected="true"]');
+    if (sel) sel.focus();
+  }
+
+  /* =========================================================
+     ENVIO PARA A PLANILHA (somente com consentimento)
+     Envia por dia: nome, dia, concluído, antes, depois, data.
+     As reflexões escritas NUNCA são enviadas.
+     ========================================================= */
+  const Sync = (function () {
+    let timer = null;
+    let flushing = false;
+
+    function configured() { return !!CONFIG.sheetUrl; }
+    function enabled() { return configured() && !!state.aluno && state.aluno.consent; }
+
+    function post(body) {
+      const payload = Object.assign({ app: 'desafio7d', v: 1, id: state.aluno.id }, body);
+      return fetch(CONFIG.sheetUrl, {
+        method: 'POST',
+        mode: 'no-cors',
+        keepalive: true,
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(payload)
+      });
+    }
+
+    function payloadFor(n) {
+      if (n === GAD_SLOT) {
+        return {
+          action: 'gad',
+          nome: state.aluno.nome,
+          inicial: state.gad0 ? state.gad0.total : null,
+          faixaInicial: state.gad0 ? gadBand(state.gad0.total).label : '',
+          inicialEm: state.gad0 && state.gad0.at ? state.gad0.at : '',
+          total: state.gad ? state.gad.total : null,
+          faixa: state.gad ? gadBand(state.gad.total).label : '',
+          acompanhamento: state.acompanhamento || '',
+          respondidoEm: state.gad && state.gad.at ? state.gad.at : ''
+        };
+      }
+      const d = state.days[n - 1];
+      return {
+        action: 'upsert',
+        nome: state.aluno.nome,
+        dia: n,
+        tema: DAYS[n - 1].title,
+        concluido: d.done,
+        antes: d.antes,
+        depois: d.depois,
+        concluidoEm: d.doneAt || ''
+      };
+    }
+
+    async function flush() {
+      if (!enabled() || flushing || !state.pendentes.length) return;
+      if (navigator.onLine === false) return;
+      flushing = true;
+      const lote = state.pendentes.slice();
+      for (let i = 0; i < lote.length; i++) {
+        const n = lote[i];
+        try {
+          await post(payloadFor(n));
+          state.pendentes = state.pendentes.filter(function (x) { return x !== n; });
+          Store.save(state);
+        } catch (e) { break; }
+      }
+      flushing = false;
+    }
+
+    function queue(n) {
+      if (!enabled()) return;
+      if (state.pendentes.indexOf(n) === -1) state.pendentes.push(n);
+      Store.save(state);
+      clearTimeout(timer);
+      timer = setTimeout(flush, 1500);
+    }
+
+    function queueAll() {
+      if (!enabled()) return;
+      state.days.forEach(function (d, i) {
+        if (dayHasData(d) && state.pendentes.indexOf(i + 1) === -1) state.pendentes.push(i + 1);
+      });
+      if ((state.gad0 || state.gad || state.acompanhamento) && state.pendentes.indexOf(GAD_SLOT) === -1) state.pendentes.push(GAD_SLOT);
+      Store.save(state);
+      clearTimeout(timer);
+      timer = setTimeout(flush, 500);
+    }
+
+    function forget() {
+      if (!configured() || !state.aluno) return Promise.resolve();
+      return post({ action: 'delete' }).catch(function () { /* sem conexão */ });
+    }
+
+    return { configured: configured, enabled: enabled, queue: queue, queueAll: queueAll, flush: flush, forget: forget };
+  })();
+
+  function consentText() {
+    return 'Autorizo enviar meu primeiro nome, os dias que concluí, as notas do Medidor de Aceleração Mental e, se eu responder, as pontuações do questionário de ansiedade (início e fim) e se desejo acompanhamento para ' +
+      CONFIG.responsavel + ', apenas para acompanhar a evolução da turma e responder a pedidos de acompanhamento. Minhas reflexões escritas nunca saem deste aparelho. ' +
+      'Os dados são apagados em até ' + CONFIG.retencaoDias + ' dias após o desafio, e posso cancelar a qualquer momento no rodapé desta página.';
+  }
+
+  function renderOnboarding() {
+    const show = Sync.configured() && (!state.aluno || onboardingForced);
+    $('onboarding').classList.toggle('hidden', !show);
+    document.querySelectorAll('[data-gated]').forEach(function (el) { el.classList.toggle('hidden', show); });
+
+    $('headerSub').textContent = state.aluno
+      ? 'Olá, ' + state.aluno.nome + '. Um passo por dia. Pratique, registre e veja sua mente desacelerar.'
+      : 'Um passo por dia. Pratique, registre e veja sua mente desacelerar.';
+
+    const status = $('shareStatus');
+    if (Sync.configured() && state.aluno && !show) {
+      status.classList.remove('hidden');
+      if (state.aluno.consent) {
+        $('shareStatusText').textContent = 'Você está compartilhando seu progresso com ' + CONFIG.responsavel + '.';
+        $('shareToggle').textContent = 'Parar de compartilhar';
+      } else {
+        $('shareStatusText').textContent = 'Seu progresso não está sendo compartilhado.';
+        $('shareToggle').textContent = 'Compartilhar com ' + CONFIG.responsavel;
+      }
+    } else {
+      status.classList.add('hidden');
+    }
+    $('shareConfirm').classList.add('hidden');
+  }
+
+  let onboardingForced = false;
+
+  function bindOnboarding() {
+    $('obConsentText').textContent = consentText();
+
+    $('obStart').addEventListener('click', function () {
+      const nome = cleanName($('obNome').value);
+      if (!nome) {
+        $('obMsg').textContent = 'Escreva seu primeiro nome para começar.';
+        $('obNome').focus();
+        return;
+      }
+      const wasConsent = !!(state.aluno && state.aluno.consent);
+      state.aluno = { id: state.aluno ? state.aluno.id : newId(), nome: nome, consent: $('obConsent').checked };
+      onboardingForced = false;
+      $('obMsg').textContent = '';
+      persist();
+      renderAll();
+      if (state.aluno.consent) Sync.queueAll();
+      else if (wasConsent) { state.pendentes = []; Store.save(state); Sync.forget(); }
+      $('app').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    $('obNome').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('obStart').click(); });
+
+    $('shareToggle').addEventListener('click', function () {
+      if (state.aluno.consent) {
+        $('shareStatus').classList.add('hidden');
+        $('shareConfirm').classList.remove('hidden');
+      } else {
+        onboardingForced = true;
+        $('obNome').value = state.aluno.nome;
+        $('obConsent').checked = false;
+        renderAll();
+        $('app').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+    $('shareNo').addEventListener('click', renderOnboarding);
+    $('shareYes').addEventListener('click', function () {
+      Sync.forget();
+      state.aluno.consent = false;
+      state.pendentes = [];
+      persist();
+      renderOnboarding();
+    });
+
+    window.addEventListener('online', Sync.flush);
+  }
+
+  /* =========================================================
+     ENCERRAMENTO: GAD-7 E ACOMPANHAMENTO
+     ========================================================= */
+  let gadEditing = false;
+  const drafts = { base: [null, null, null, null, null, null, null], final: [null, null, null, null, null, null, null] };
+  const FORMS = {
+    base: { wrap: 'baseQuestions', missing: 'baseMissing', submit: 'baseSubmit', accent: 'indigo' },
+    final: { wrap: 'gadQuestions', missing: 'gadMissing', submit: 'gadSubmit', accent: 'emerald' }
+  };
+
+  function finalVisible() {
+    return state.days[TOTAL - 1].done && $('onboarding').classList.contains('hidden');
+  }
+
+  function buildGadForm(key) {
+    const cfg = FORMS[key];
+    const wrap = $(cfg.wrap);
+    if (wrap.childElementCount) return;
+    const on = cfg.accent === 'indigo'
+      ? 'hover:border-indigo-300 peer-checked:bg-indigo-600 peer-checked:border-indigo-600 peer-focus-visible:ring-indigo-300'
+      : 'hover:border-emerald-300 peer-checked:bg-emerald-600 peer-checked:border-emerald-600 peer-focus-visible:ring-emerald-300';
+    GAD_ITEMS.forEach(function (q, i) {
+      const fs = document.createElement('fieldset');
+      fs.className = 'rounded-xl border border-slate-200 p-4';
+      const lg = document.createElement('legend');
+      lg.className = 'sr-only';
+      lg.textContent = q;
+      fs.appendChild(lg);
+      const p = document.createElement('p');
+      p.className = 'text-sm font-medium text-slate-800';
+      p.textContent = (i + 1) + '. ' + q;
+      fs.appendChild(p);
+      const grid = document.createElement('div');
+      grid.className = 'mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2';
+      GAD_OPTS.forEach(function (opt, v) {
+        const label = document.createElement('label');
+        label.className = 'cursor-pointer';
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = key + 'gad' + i;
+        input.value = String(v);
+        input.className = 'sr-only peer';
+        input.addEventListener('change', function () {
+          drafts[key][i] = v;
+          updateGadSubmit(key);
+        });
+        const span = document.createElement('span');
+        span.className = 'block h-full text-center rounded-lg border border-slate-200 bg-white px-2 py-2.5 text-xs font-medium text-slate-600 transition peer-checked:text-white peer-focus-visible:ring-2 ' + on;
+        span.textContent = opt;
+        label.appendChild(input);
+        label.appendChild(span);
+        grid.appendChild(label);
+      });
+      fs.appendChild(grid);
+      wrap.appendChild(fs);
+    });
+  }
+
+  function syncGadInputs(key) {
+    drafts[key].forEach(function (v, i) {
+      document.querySelectorAll('input[name="' + key + 'gad' + i + '"]').forEach(function (inp) {
+        inp.checked = v !== null && Number(inp.value) === v;
+      });
+    });
+    updateGadSubmit(key);
+  }
+
+  function updateGadSubmit(key) {
+    const cfg = FORMS[key];
+    const faltam = drafts[key].filter(function (v) { return v === null; }).length;
+    $(cfg.submit).disabled = faltam > 0;
+    $(cfg.missing).textContent = faltam ? (faltam === 1 ? 'Falta 1 pergunta.' : 'Faltam ' + faltam + ' perguntas.') : '';
+  }
+
+  function renderBaseline() {
+    const sec = $('baselineSection');
+    const onboardHidden = $('onboarding').classList.contains('hidden');
+    const show = onboardHidden && !CONFIG.liberarTodos && !state.days[0].done && (!!state.gad0 || !dayHasData(state.days[0]));
+    sec.classList.toggle('hidden', !show);
+    if (!show) return;
+    buildGadForm('base');
+    $('baseForm').classList.toggle('hidden', !!state.gad0);
+    $('baseResult').classList.toggle('hidden', !state.gad0);
+    if (!state.gad0) { syncGadInputs('base'); return; }
+    const band = gadBand(state.gad0.total);
+    $('baseScore').textContent = String(state.gad0.total);
+    $('baseScore').className = 'text-3xl font-extrabold leading-none ' + band.score;
+    $('baseBand').textContent = band.label;
+    $('baseBand').className = 'inline-block text-xs font-semibold rounded-full px-2.5 py-1 ' + band.badge;
+    $('baseCard').className = 'rounded-xl border p-4 flex items-center gap-4 ' + band.card;
+    $('baseText').textContent = band.recommend
+      ? 'Seu ponto de partida está registrado. Nesta faixa, além do desafio, a recomendação é buscar uma avaliação com um profissional de saúde mental. O desafio pode ajudar, mas não substitui esse cuidado.'
+      : 'Seu ponto de partida está registrado. Agora é com o Dia 1, logo abaixo.';
+    $('baseHelp').classList.toggle('hidden', !band.recommend);
+  }
+
+  function careLink() {
+    if (CONFIG.whatsappContato) {
+      return 'https://wa.me/' + CONFIG.whatsappContato + '?text=' + encodeURIComponent(
+        'Olá, Jefferson! Terminei o Desafio 7 Dias de Desaceleração' + (state.aluno ? ' (sou ' + state.aluno.nome + ')' : '') + ' e gostaria de agendar uma conversa sobre acompanhamento.');
+    }
+    return CONFIG.siteUrl || '';
+  }
+
+  function ctaCopy(band) {
+    if (band && band.label === 'Faixa grave') return {
+      title: 'Você não precisa seguir sozinho(a)',
+      text: 'Seu resultado mostra que vale ter apoio profissional agora. No acompanhamento individual, online e em português, trabalhamos juntos a raiz da sua ansiedade com um plano feito para você. Nesta faixa, o ideal é combinar a terapia com uma avaliação médica ou psicológica.'
+    };
+    if (band && band.recommend) return {
+      title: 'Você não precisa seguir sozinho(a)',
+      text: 'Seu resultado mostra que vale ter apoio profissional agora. No acompanhamento individual, online e em português, trabalhamos juntos a raiz da sua ansiedade com um plano feito para você.'
+    };
+    return {
+      title: 'Continue o que você começou',
+      text: 'Em 7 dias você aprendeu a perceber e a desacelerar a ansiedade. No acompanhamento individual, online e em português, vamos à raiz do que acelera você, no seu ritmo.'
+    };
+  }
+
+  function renderCare() {
+    const band = state.gad ? gadBand(state.gad.total) : null;
+    const copy = ctaCopy(band);
+    $('ctaTitle').textContent = copy.title;
+    $('ctaText').textContent = copy.text;
+    $('ctaName').textContent = CONFIG.terapeutaNome + ', ' + CONFIG.responsavel;
+    $('ctaCred').textContent = CONFIG.terapeutaCredenciais;
+
+    const yes = $('careYes');
+    const link = careLink();
+    if (link) { yes.href = link; yes.target = '_blank'; } else { yes.removeAttribute('href'); yes.removeAttribute('target'); }
+    yes.classList.toggle('ring-4', state.acompanhamento === 'sim');
+    yes.classList.toggle('ring-white/40', state.acompanhamento === 'sim');
+
+    const status = $('careStatus');
+    if (state.acompanhamento === 'sim') {
+      status.textContent = CONFIG.whatsappContato
+        ? 'Abrimos o WhatsApp para você. Se quiser, anexe o seu relatório em PDF na conversa.'
+        : (link ? 'Abrimos a página da ' + CONFIG.responsavel + ' para você agendar.' : 'Anotado. Envie uma mensagem pelo grupo para combinarmos.');
+    } else if (state.acompanhamento === 'nao') {
+      status.textContent = 'Tudo bem. Se mudar de ideia, o convite continua aqui.';
+    } else {
+      status.textContent = '';
+    }
+  }
+
+  function compareText() {
+    const a = state.gad0.total, b = state.gad.total, diff = b - a;
+    const inicio = 'No Dia 1, seu ponto de partida foi ' + a + ' pontos (' + gadBand(a).label.toLowerCase() + '). Hoje, ' + b + ' pontos. ';
+    if (diff < 0) return inicio + 'Seus sinais de ansiedade diminuíram ' + Math.abs(diff) + (Math.abs(diff) === 1 ? ' ponto' : ' pontos') + ' ao longo do desafio.';
+    if (diff > 0) return inicio + 'Seus sinais de ansiedade aumentaram ' + diff + (diff === 1 ? ' ponto' : ' pontos') + '. Isso pode refletir o que aconteceu na sua vida nesta semana, e é um bom motivo para conversar com um profissional.';
+    return inicio + 'Sua pontuação se manteve igual ao ponto de partida.';
+  }
+
+  function renderFinal() {
+    const sec = $('finalSection');
+    const show = finalVisible();
+    sec.classList.toggle('hidden', !show);
+    if (!show) return;
+    buildGadForm('final');
+    const editing = !state.gad || gadEditing;
+    $('gadForm').classList.toggle('hidden', !editing);
+    $('gadResult').classList.toggle('hidden', editing);
+    if (editing) { syncGadInputs('final'); return; }
+
+    const band = gadBand(state.gad.total);
+    $('gadScore').textContent = String(state.gad.total);
+    $('gadScore').className = 'text-4xl font-extrabold leading-none ' + band.score;
+    $('gadBand').textContent = band.label;
+    $('gadBand').className = 'inline-block text-xs font-semibold rounded-full px-2.5 py-1 ' + band.badge;
+    $('gadText').textContent = band.text;
+    $('gadScoreCard').className = 'rounded-2xl border p-5 flex items-center gap-4 ' + band.card;
+    const cmp = $('gadCompare');
+    if (state.gad0) {
+      cmp.textContent = compareText();
+      cmp.classList.remove('hidden');
+    } else {
+      cmp.classList.add('hidden');
+    }
+    renderCare();
+  }
+
+  function bindFinal() {
+    $('baseSubmit').addEventListener('click', function () {
+      if (drafts.base.some(function (v) { return v === null; })) return;
+      state.gad0 = validGad({ answers: drafts.base.slice(), at: todayKey() });
+      persist();
+      Sync.queue(GAD_SLOT);
+      renderAll();
+      $('baselineSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    $('gadSubmit').addEventListener('click', function () {
+      if (drafts.final.some(function (v) { return v === null; })) return;
+      state.gad = validGad({ answers: drafts.final.slice(), at: todayKey() });
+      gadEditing = false;
+      persist();
+      Sync.queue(GAD_SLOT);
+      renderFinal();
+      postHeight();
+      $('finalSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    $('gadRedo').addEventListener('click', function () {
+      gadEditing = true;
+      drafts.final = state.gad ? state.gad.answers.slice() : [null, null, null, null, null, null, null];
+      renderFinal();
+      postHeight();
+    });
+    $('careYes').addEventListener('click', function () {
+      // o link abre normalmente; aqui só registramos a escolha
+      state.acompanhamento = 'sim';
+      persist();
+      Sync.queue(GAD_SLOT);
+      renderCare();
+      postHeight();
+    });
+    $('careNo').addEventListener('click', function () {
+      state.acompanhamento = 'nao';
+      persist();
+      Sync.queue(GAD_SLOT);
+      renderCare();
+      postHeight();
+    });
+    $('pdfBtn').addEventListener('click', downloadPdf);
+  }
+
+  /* =========================================================
+     RELATÓRIO EM PDF (gerado no próprio aparelho)
+     ========================================================= */
+  let jsPdfPromise = null;
+  function loadJsPDF() {
+    if (window.jspdf && window.jspdf.jsPDF) return Promise.resolve(window.jspdf.jsPDF);
+    if (!jsPdfPromise) {
+      jsPdfPromise = new Promise(function (resolve, reject) {
+        const s = document.createElement('script');
+        s.src = CONFIG.jspdfUrl;
+        s.onload = function () { window.jspdf && window.jspdf.jsPDF ? resolve(window.jspdf.jsPDF) : reject(new Error('jspdf')); };
+        s.onerror = function () { jsPdfPromise = null; reject(new Error('rede')); };
+        document.head.appendChild(s);
+      });
+    }
+    return jsPdfPromise;
+  }
+
+  // As fontes padrão do PDF só aceitam caracteres latinos: troca aspas curvas e remove emojis.
+  function pdfSafe(s) {
+    return String(s == null ? '' : s)
+      .replace(/[\u201C\u201D]/g, '"').replace(/[\u2018\u2019]/g, "'")
+      .replace(/[\u2013\u2014]/g, '-').replace(/\u2026/g, '...')
+      .normalize('NFC')
+      .replace(/[^\x09\x0A\x0D\x20-\x7E\xA0-\xFF]/g, '')
+      .trim();
+  }
+
+  function bestDay() {
+    let best = null;
+    state.days.forEach(function (d, i) {
+      const r = reliefOf(d);
+      if (r !== null && (best === null || r > best.r)) best = { n: i + 1, r: r };
+    });
+    return best;
+  }
+
+  function logoPng() {
+    return new Promise(function (resolve) {
+      try {
+        const img = document.querySelector('header img');
+        if (!img) return resolve(null);
+        const draw = function () {
+          try {
+            const c = document.createElement('canvas');
+            c.width = 192; c.height = 192;
+            c.getContext('2d').drawImage(img, 0, 0, 192, 192);
+            resolve(c.toDataURL('image/png'));
+          } catch (e) { resolve(null); }
+        };
+        if (img.complete) draw(); else img.addEventListener('load', draw, { once: true });
+      } catch (e) { resolve(null); }
+    });
+  }
+
+  function slug(s) {
+    return String(s || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  }
+
+  async function buildPdf() {
+    const JsPDF = await loadJsPDF();
+    const doc = new JsPDF({ unit: 'mm', format: 'a4' });
+    const W = 210, M = 18, CW = W - 2 * M, BOTTOM = 278;
+    const C = { ink: [15, 23, 42], muted: [100, 116, 139], indigo: [79, 70, 229], emerald: [16, 185, 129], line: [226, 232, 240], soft: [248, 250, 252], rose: [159, 18, 57] };
+    let y = M;
+
+    const color = function (c) { doc.setTextColor(c[0], c[1], c[2]); };
+    const ensure = function (hgt) { if (y + hgt > BOTTOM) { doc.addPage(); y = M; } };
+    const text = function (s, size, o) {
+      o = o || {};
+      doc.setFont('helvetica', o.bold ? 'bold' : 'normal');
+      doc.setFontSize(size);
+      color(o.color || C.ink);
+      const lines = doc.splitTextToSize(pdfSafe(s), o.width || CW);
+      const lh = size * 0.43;
+      lines.forEach(function (ln) {
+        ensure(lh);
+        doc.text(ln, o.x || M, y + size * 0.33);
+        y += lh;
+      });
+      y += (o.after == null ? 2 : o.after);
+    };
+    const h2 = function (s) {
+      y += 4;
+      ensure(16);
+      text(s, 12.5, { bold: true, color: C.indigo, after: 3 });
+    };
+
+    // Cabeçalho
+    const logo = await logoPng();
+    if (logo) doc.addImage(logo, 'PNG', M, y, 20, 20);
+    const tx = M + (logo ? 25 : 0);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(17); color(C.ink);
+    doc.text(pdfSafe('Relatório do Desafio 7 Dias'), tx, y + 8);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(10); color(C.muted);
+    doc.text(pdfSafe('Diário de Controle Emocional, ' + CONFIG.responsavel), tx, y + 14);
+    const hoje = new Date();
+    const dataTxt = pad2(hoje.getDate()) + '/' + pad2(hoje.getMonth() + 1) + '/' + hoje.getFullYear();
+    doc.text(pdfSafe((state.aluno ? state.aluno.nome + ', ' : '') + 'gerado em ' + dataTxt), tx, y + 19);
+    y += 25;
+    doc.setDrawColor(C.line[0], C.line[1], C.line[2]); doc.setLineWidth(0.3); doc.line(M, y, W - M, y);
+    y += 3;
+
+    // Números da semana
+    h2('Sua semana em números');
+    const avg = averageRelief();
+    const best = bestDay();
+    const stats = [
+      ['Dias concluídos', completedCount() + ' de ' + TOTAL],
+      ['Alívio médio após a técnica', avg.value === null ? 'sem dados' : Math.round(avg.value) + '%'],
+      ['Dia de maior alívio', best ? 'Dia ' + best.n + ' (' + Math.round(best.r) + '%)' : 'sem dados']
+    ];
+    ensure(22);
+    const bw = (CW - 8) / 3;
+    stats.forEach(function (s, i) {
+      const x = M + i * (bw + 4);
+      doc.setFillColor(C.soft[0], C.soft[1], C.soft[2]);
+      doc.setDrawColor(C.line[0], C.line[1], C.line[2]);
+      doc.roundedRect(x, y, bw, 19, 2, 2, 'FD');
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8); color(C.muted);
+      doc.text(pdfSafe(s[0]), x + 4, y + 6);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(13); color(C.ink);
+      doc.text(pdfSafe(s[1]), x + 4, y + 14.5);
+    });
+    y += 24;
+    if (best) text('Técnica que mais ajudou: ' + DAYS[best.n - 1].exercise.title + ' (Dia ' + best.n + ', ' + DAYS[best.n - 1].title + ').', 10);
+    const d1 = state.days[0], d7 = state.days[TOTAL - 1];
+    if (d1.antes != null && d7.antes != null) text('Aceleração antes da técnica: ' + d1.antes + '/10 no Dia 1 e ' + d7.antes + '/10 no Dia 7.', 10);
+
+    // Gráfico
+    h2('Evolução da aceleração mental');
+    ensure(70);
+    const cx = M + 8, cw = CW - 14, ch = 48, cy = y + 2;
+    const px = function (i) { return cx + i * cw / (TOTAL - 1); };
+    const py = function (v) { return cy + (10 - v) * ch / 9; };
+    doc.setLineWidth(0.2);
+    [1, 4, 7, 10].forEach(function (v) {
+      doc.setDrawColor(C.line[0], C.line[1], C.line[2]);
+      doc.line(cx, py(v), cx + cw, py(v));
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7); color(C.muted);
+      doc.text(String(v), cx - 3, py(v) + 1, { align: 'right' });
+    });
+    for (let i = 0; i < TOTAL; i++) doc.text('Dia ' + (i + 1), px(i), cy + ch + 5, { align: 'center' });
+    [['antes', C.indigo], ['depois', C.emerald]].forEach(function (pair) {
+      const k = pair[0], c = pair[1];
+      const pts = [];
+      state.days.forEach(function (d, i) { if (d[k] != null) pts.push([px(i), py(d[k])]); });
+      doc.setDrawColor(c[0], c[1], c[2]); doc.setLineWidth(0.7);
+      for (let i = 1; i < pts.length; i++) doc.line(pts[i - 1][0], pts[i - 1][1], pts[i][0], pts[i][1]);
+      doc.setFillColor(c[0], c[1], c[2]);
+      pts.forEach(function (p) { doc.circle(p[0], p[1], 1.1, 'F'); });
+    });
+    y = cy + ch + 10;
+    doc.setFillColor(C.indigo[0], C.indigo[1], C.indigo[2]); doc.rect(cx, y - 2.2, 5, 1.6, 'F');
+    doc.setFontSize(8); color(C.muted); doc.text('Antes da técnica', cx + 7, y - 0.8);
+    doc.setFillColor(C.emerald[0], C.emerald[1], C.emerald[2]); doc.rect(cx + 40, y - 2.2, 5, 1.6, 'F');
+    doc.text(pdfSafe('Depois da técnica'), cx + 47, y - 0.8);
+    y += 4;
+
+    // Dia a dia
+    h2('Dia a dia');
+    const cols = [['Dia', 12], ['Tema', 92], ['Antes', 22], ['Depois', 22], ['Alívio', CW - 148]];
+    const row = function (vals, head) {
+      ensure(8);
+      if (head) { doc.setFillColor(C.soft[0], C.soft[1], C.soft[2]); doc.rect(M, y, CW, 7, 'F'); }
+      let x = M;
+      doc.setFont('helvetica', head ? 'bold' : 'normal'); doc.setFontSize(9); color(head ? C.muted : C.ink);
+      vals.forEach(function (v, i) { doc.text(pdfSafe(v), x + 2, y + 4.8); x += cols[i][1]; });
+      y += 7;
+      doc.setDrawColor(C.line[0], C.line[1], C.line[2]); doc.setLineWidth(0.2); doc.line(M, y, W - M, y);
+    };
+    row(cols.map(function (c) { return c[0]; }), true);
+    state.days.forEach(function (d, i) {
+      const r = reliefOf(d);
+      row([String(i + 1), DAYS[i].title, d.antes == null ? '-' : d.antes + '/10', d.depois == null ? '-' : d.depois + '/10', r === null ? '-' : Math.round(r) + '%']);
+    });
+    y += 2;
+
+    // GAD-7
+    if (state.gad0 || state.gad) {
+      if (state.gad) ensure(62); // mantém título, pontuações e cartão na mesma página
+      h2('Questionário de ansiedade (GAD-7)');
+      if (state.gad0) {
+        text('Ponto de partida (Dia 1): ' + state.gad0.total + ' de 21 pontos, ' + gadBand(state.gad0.total).label.toLowerCase() + '.', 10, { bold: true, after: state.gad ? 1 : 3 });
+      }
+    }
+    if (state.gad) {
+      if (state.gad0) text('Encerramento (Dia 7): ' + state.gad.total + ' de 21 pontos, ' + gadBand(state.gad.total).label.toLowerCase() + '.', 10, { bold: true, after: 3 });
+      const band = gadBand(state.gad.total);
+      ensure(20);
+      doc.setFillColor(band.light[0], band.light[1], band.light[2]);
+      doc.roundedRect(M, y, CW, 16, 2, 2, 'F');
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(20); doc.setTextColor(band.rgb[0], band.rgb[1], band.rgb[2]);
+      doc.text(String(state.gad.total), M + 6, y + 10.5);
+      doc.setFontSize(8); doc.setFont('helvetica', 'normal'); color(C.muted);
+      doc.text('de 21 pontos', M + 6, y + 14);
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(12); doc.setTextColor(band.rgb[0], band.rgb[1], band.rgb[2]);
+      doc.text(pdfSafe(band.label), M + 30, y + 9.5);
+      y += 20;
+      text(band.text, 10);
+      if (state.gad0) text(compareText(), 10, { after: 3 });
+      text('Este resultado não é um diagnóstico. O GAD-7 é um questionário de rastreio: ele indica sinais, e só uma avaliação com um profissional de saúde mental pode dizer o que eles significam para você.', 8.5, { color: C.muted, after: 3 });
+      if (state.acompanhamento) {
+        text('Acompanhamento profissional: ' + (state.acompanhamento === 'sim' ? 'quero conversar sobre acompanhamento.' : 'não por agora.'), 10, { bold: true, after: 3 });
+      }
+      text('Suas respostas no Dia 7 (últimas 2 semanas)' + (state.gad0 ? ', com o Dia 1 entre parênteses:' : ':'), 9, { bold: true, color: C.muted, after: 1 });
+      GAD_ITEMS.forEach(function (q, i) {
+        const antes = state.gad0 ? ' (Dia 1: ' + GAD_OPTS[state.gad0.answers[i]].toLowerCase() + ')' : '';
+        text((i + 1) + '. ' + q + ': ' + GAD_OPTS[state.gad.answers[i]].toLowerCase() + antes + '.', 9, { after: 1 });
+      });
+      y += 1;
+    }
+
+    // Convite para o atendimento
+    {
+      const copy = ctaCopy(state.gad ? gadBand(state.gad.total) : null);
+      const pad = 7, iw = CW - 2 * pad;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10);
+      const lines = doc.splitTextToSize(pdfSafe(copy.text), iw);
+      const contatos = [];
+      if (CONFIG.siteUrl) contatos.push({ t: CONFIG.siteUrl.replace(/^https?:\/\//, ''), url: CONFIG.siteUrl });
+      const chamada = 'Para agendar, me chame no WhatsApp pelo grupo de alunos.';
+      const boxH = pad + 2 + 6 + 6 + lines.length * 4.4 + 3 + 4.5 + 7 + (contatos.length ? 5.5 : 0) + pad - 1;
+      y += 6;
+      ensure(boxH + 2);
+      doc.setFillColor(7, 80, 165);
+      doc.roundedRect(M, y, CW, boxH, 3, 3, 'F');
+      let by = y + pad + 2;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(7.5); doc.setTextColor(230, 185, 78);
+      doc.text('PRÓXIMO PASSO', M + pad, by);
+      by += 6;
+      doc.setFontSize(13); doc.setTextColor(255, 255, 255);
+      doc.text(pdfSafe(copy.title), M + pad, by);
+      by += 6;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(10); doc.setTextColor(221, 235, 248);
+      lines.forEach(function (ln) { doc.text(ln, M + pad, by); by += 4.4; });
+      by += 3;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(255, 255, 255);
+      doc.text(pdfSafe(CONFIG.terapeutaNome + ', ' + CONFIG.responsavel), M + pad, by);
+      by += 4.5;
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(8.5); doc.setTextColor(185, 211, 238);
+      doc.text(pdfSafe(CONFIG.terapeutaCredenciais), M + pad, by);
+      by += 7;
+      doc.setFont('helvetica', 'bold'); doc.setFontSize(10); doc.setTextColor(255, 255, 255);
+      doc.text(pdfSafe(chamada), M + pad, by);
+      if (contatos.length) {
+        by += 5.5;
+        doc.setFont('helvetica', 'normal'); doc.setFontSize(9.5); doc.setTextColor(221, 235, 248);
+        let cx2 = M + pad;
+        contatos.forEach(function (c) {
+          const label = pdfSafe(c.t);
+          doc.textWithLink(label, cx2, by, { url: c.url });
+          cx2 += doc.getTextWidth(label) + 10;
+        });
+      }
+      y += boxH + 2;
+    }
+
+    // Ajuda
+    h2('Onde buscar ajuda gratuita');
+    text('No Brasil', 10, { bold: true, after: 0.5 });
+    text('Atendimento pelo SUS na Unidade Básica de Saúde (UBS) ou no CAPS da sua cidade.', 10, { after: 2.5 });
+    text('No Reino Unido', 10, { bold: true, after: 0.5 });
+    text('Fale com o seu GP ou faça o autoencaminhamento para o NHS Talking Therapies. Para orientação urgente, ligue 111.', 10, { after: 2.5 });
+    text('Em outro país, procure o serviço público de saúde local.', 9, { color: C.muted, after: 4 });
+    ensure(34); // o bloco de crise nunca é dividido entre páginas
+    text('Se você estiver em sofrimento intenso', 10.5, { bold: true, color: C.rose, after: 1 });
+    text('Se tiver pensamentos de se machucar ou de não querer viver, fale agora com alguém.', 10, { color: C.rose, after: 1.5 });
+    text('No Brasil: CVV, ligue 188 (gratuito, 24 horas) ou converse pelo chat em cvv.org.br. Emergência: SAMU 192.', 10, { bold: true, color: C.rose, after: 1 });
+    text('No Reino Unido: Samaritans, ligue 116 123 (gratuito, 24 horas). Emergência: 999.', 10, { bold: true, color: C.rose, after: 1 });
+    text('Em outro país: ligue para o número de emergência local.', 10, { bold: true, color: C.rose });
+
+    // Reflexões
+    const notas = state.days.filter(function (d) { return d.nota && d.nota.trim(); });
+    if (notas.length) {
+      h2('Minhas reflexões');
+      state.days.forEach(function (d, i) {
+        if (!d.nota || !d.nota.trim()) return;
+        text('Dia ' + (i + 1) + ': ' + DAYS[i].title, 10, { bold: true, after: 1 });
+        text(d.nota, 10, { after: 4 });
+      });
+    }
+
+    // Rodapé em todas as páginas
+    const pages = doc.getNumberOfPages();
+    for (let p = 1; p <= pages; p++) {
+      doc.setPage(p);
+      doc.setFont('helvetica', 'normal'); doc.setFontSize(7.5); color(C.muted);
+      doc.text(pdfSafe('Este relatório apoia sua prática e não é um diagnóstico. ' + CONFIG.responsavel + '.'), M, 289);
+      doc.text(pdfSafe('Página ' + p + ' de ' + pages), W - M, 289, { align: 'right' });
+    }
+
+    const nome = state.aluno ? slug(state.aluno.nome) : '';
+    return { doc: doc, filename: 'relatorio-desafio-7-dias' + (nome ? '-' + nome : '') + '.pdf' };
+  }
+
+  async function downloadPdf() {
+    const btn = $('pdfBtn'), label = $('pdfBtnText'), msg = $('pdfMsg');
+    flushNote();
+    btn.disabled = true;
+    label.textContent = 'Gerando seu relatório...';
+    try {
+      const out = await buildPdf();
+      out.doc.save(out.filename);
+      msg.textContent = 'Relatório gerado. Se ele não aparecer, procure em Downloads ou nos Arquivos do seu celular.';
+      msg.className = 'mt-2 text-xs text-emerald-700 font-medium leading-relaxed';
+    } catch (e) {
+      msg.textContent = 'Não consegui gerar o PDF agora. Confira sua internet e tente de novo.';
+      msg.className = 'mt-2 text-xs text-rose-600 font-medium leading-relaxed';
+    }
+    label.textContent = 'Baixar meu relatório em PDF';
+    btn.disabled = false;
+  }
+
+  /* =========================================================
+     BACKUP ENTRE APARELHOS (código copia e cola)
+     ========================================================= */
+  const BACKUP_PREFIX = 'RDS1-';
+  const BACKUP_APP = 'desafio7d';
+
+  function encodeBackup() {
+    const payload = { v: 1, app: BACKUP_APP, savedAt: new Date().toISOString(), aluno: state.aluno, gad0: state.gad0, gad: state.gad, acompanhamento: state.acompanhamento, days: state.days };
+    const bytes = new TextEncoder().encode(JSON.stringify(payload));
+    let bin = '';
+    for (let i = 0; i < bytes.length; i++) bin += String.fromCharCode(bytes[i]);
+    return BACKUP_PREFIX + btoa(bin);
+  }
+
+  function decodeBackup(code) {
+    const clean = String(code || '').replace(/\s+/g, '');
+    if (!clean.startsWith(BACKUP_PREFIX)) throw new Error('prefixo');
+    const bin = atob(clean.slice(BACKUP_PREFIX.length));
+    const bytes = new Uint8Array(bin.length);
+    for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+    const data = JSON.parse(new TextDecoder().decode(bytes));
+    if (!data || data.app !== BACKUP_APP || !Array.isArray(data.days)) throw new Error('formato');
+    return data;
+  }
+
+  function formatDate(iso) {
+    const d = new Date(iso);
+    if (isNaN(d.getTime())) return '';
+    const p = function (n) { return String(n).padStart(2, '0'); };
+    return p(d.getDate()) + '/' + p(d.getMonth() + 1) + ' às ' + p(d.getHours()) + 'h' + p(d.getMinutes());
+  }
+
+  function hasAnyData(days) {
+    return days.some(function (d) {
+      return d && (d.done || d.antes != null || d.depois != null || (d.nota && d.nota.trim()));
+    });
+  }
+
+  async function copyText(text, textarea) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (e) {
+      try {
+        textarea.focus();
+        textarea.select();
+        textarea.setSelectionRange(0, text.length);
+        return document.execCommand('copy');
+      } catch (e2) { return false; }
+    }
+  }
+
+  function bindBackup() {
+    let pending = null;
+
+    $('backupBox').addEventListener('toggle', postHeight);
+
+    $('exportBtn').addEventListener('click', function () {
+      flushNote();
+      const code = encodeBackup();
+      $('exportCode').value = code;
+      $('exportArea').classList.remove('hidden');
+      $('exportBtn').textContent = 'Gerar código atualizado';
+      $('exportMsg').textContent = hasAnyData(state.days)
+        ? 'Este código guarda tudo o que você registrou até agora. Se continuar preenchendo aqui, gere um novo antes de trocar de aparelho.'
+        : 'Atenção: você ainda não registrou nada neste aparelho, então o código está vazio.';
+      $('exportMsg').className = 'mt-2 text-[11px] text-slate-500 leading-relaxed';
+      $('shareBtn').classList.toggle('hidden', typeof navigator.share !== 'function');
+      postHeight();
+    });
+
+    $('copyBtn').addEventListener('click', async function () {
+      const ok = await copyText($('exportCode').value, $('exportCode'));
+      const msg = $('exportMsg');
+      if (ok) {
+        msg.textContent = 'Código copiado. Agora cole numa conversa com você mesmo no WhatsApp ou no seu e-mail.';
+        msg.className = 'mt-2 text-[11px] text-emerald-700 font-medium leading-relaxed';
+        $('copyBtn').textContent = 'Copiado!';
+        setTimeout(function () { $('copyBtn').textContent = 'Copiar código'; }, 2000);
+      } else {
+        msg.textContent = 'Não consegui copiar automaticamente. Toque no código, selecione tudo e copie manualmente.';
+        msg.className = 'mt-2 text-[11px] text-amber-700 font-medium leading-relaxed';
+      }
+    });
+
+    $('shareBtn').addEventListener('click', async function () {
+      try {
+        await navigator.share({ title: 'Meu código do Diário de Controle Emocional', text: $('exportCode').value });
+      } catch (e) {
+        if (e && e.name === 'AbortError') return;
+        $('exportMsg').textContent = 'O envio direto não está disponível aqui. Use o botão Copiar código.';
+        $('exportMsg').className = 'mt-2 text-[11px] text-amber-700 font-medium leading-relaxed';
+      }
+    });
+
+    const setImportMsg = function (text, tone) {
+      const el = $('importMsg');
+      el.textContent = text;
+      el.className = 'mt-2 text-[11px] leading-relaxed font-medium ' + (tone === 'ok' ? 'text-emerald-700' : 'text-rose-600');
+    };
+
+    const hideImportConfirm = function () { $('importConfirm').classList.add('hidden'); pending = null; };
+
+    const applyImport = function (data) {
+      const restored = normalize({ selected: 1, days: data.days, aluno: data.aluno || state.aluno, gad0: data.gad0, gad: data.gad, acompanhamento: data.acompanhamento });
+      state = restored;
+      state.selected = defaultDay();
+      onboardingForced = false;
+      persist();
+      renderAll();
+      $('importCode').value = '';
+      hideImportConfirm();
+      Sync.queueAll();
+      const n = restored.days.filter(function (d) { return d.done; }).length;
+      const when = formatDate(data.savedAt);
+      setImportMsg('Pronto! Dados restaurados' + (when ? ' (código de ' + when + ')' : '') + '. ' + n + (n === 1 ? ' dia concluído.' : ' dias concluídos.'), 'ok');
+    };
+
+    $('importBtn').addEventListener('click', function () {
+      hideImportConfirm();
+      let data;
+      try { data = decodeBackup($('importCode').value); }
+      catch (e) {
+        setImportMsg('Esse código não parece válido. Confira se copiou ele inteiro, do RDS1- até o final.', 'erro');
+        return;
+      }
+      if (hasAnyData(state.days)) {
+        pending = data;
+        const when = formatDate(data.savedAt);
+        $('importConfirmText').textContent = 'Este aparelho já tem registros. Restaurar vai substituir tudo pelo conteúdo do código' + (when ? ' gerado em ' + when : '') + '.';
+        $('importConfirm').classList.remove('hidden');
+        $('importMsg').textContent = '';
+        postHeight();
+      } else {
+        applyImport(data);
+      }
+    });
+
+    $('importYes').addEventListener('click', function () { if (pending) applyImport(pending); });
+    $('importNo').addEventListener('click', hideImportConfirm);
+  }
+
+  function activeDayIndexOf(days) {
+    const i = days.findIndex(function (d) { return !d.done; });
+    return i === -1 ? TOTAL : i + 1;
+  }
+
+  /* =========================================================
+     ALTURA DINÂMICA PARA IFRAMES
+     Envia a altura para a página pai (útil se a plataforma
+     ou um script seu ajustar o iframe automaticamente).
+     ========================================================= */
+  function postHeight() {
+    if (window.parent === window) return;
+    try {
+      window.parent.postMessage({
+        type: 'diario-desaceleracao:height',
+        height: document.documentElement.scrollHeight
+      }, '*');
+    } catch (e) { /* ignora */ }
+  }
+
+  /* =========================================================
+     INICIALIZAÇÃO
+     ========================================================= */
+  function init() {
+    $('whatsappBtn').href = CONFIG.whatsappUrl;
+    if (!Store.available) $('storageWarning').classList.remove('hidden');
+    state.selected = defaultDay();
+    bindEvents();
+    bindBackup();
+    bindOnboarding();
+    bindFinal();
+    const headerLogo = document.querySelector('header img');
+    if (headerLogo) $('ctaLogo').src = headerLogo.src;
+    renderAll();
+    Sync.flush();
+    if ('ResizeObserver' in window) new ResizeObserver(postHeight).observe(document.body);
+    window.addEventListener('load', postHeight);
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
